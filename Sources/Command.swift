@@ -98,11 +98,6 @@ struct Command: AsyncParsableCommand {
             report.append(KeyedChanges(url: url, changes: changes))
         }
 
-        // let summary = report.map { (url, changes) in
-        //     return url.path + "\n" + String(repeating: "-", count: url.path.count) + "\n\n" + String(describing: changes)
-        // }.joined(separator: "\n")
-
-
         let environment = Environment()
         let context: [String: Any] = ["name": "kyle", "report": report]
         let summary = try environment.renderTemplate(string: """
