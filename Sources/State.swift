@@ -1,6 +1,6 @@
 import Foundation
 
-struct State: Codable, CustomStringConvertible {
+struct State: Codable {
 
     struct Item: Codable, Hashable {
         let path: String
@@ -30,10 +30,6 @@ struct State: Codable, CustomStringConvertible {
     }
 
     var snapshots: [URL: Snapshot]
-
-    var description: String {
-        return "State Description"
-    }
 
     init() {
         self.snapshots = [:]
