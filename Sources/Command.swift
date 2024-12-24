@@ -70,7 +70,6 @@ struct Command: AsyncParsableCommand {
         } else {
             State()
         }
-        print(oldState.description)
 
         var newState = State()
 
@@ -114,8 +113,6 @@ struct Command: AsyncParsableCommand {
 
 {% endfor %}
 """, context: context)
-
-        print(summary)
 
         // Send a summary email.
         let smtp = SMTP(
