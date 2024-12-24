@@ -99,7 +99,7 @@ struct Command: AsyncParsableCommand {
         }
 
         let environment = Environment()
-        let context: [String: Any] = ["name": "kyle", "report": report]
+        let context: [String: Any] = ["report": report]
         let summary = try environment.renderTemplate(string: """
 {% for item in report %}
 {{ item.url.path }}
