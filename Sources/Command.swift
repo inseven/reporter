@@ -12,7 +12,7 @@ enum ReporterError: Error {
 struct Command: AsyncParsableCommand {
 
     @Argument(transform: URL.init(fileURLWithPath:))
-    var path: URL
+    var config: URL
 
     func snapshot(for path: URL) async throws -> State.Snapshot {
 
@@ -48,9 +48,16 @@ struct Command: AsyncParsableCommand {
     mutating func run() async throws {
         let fileManager = FileManager.default
 
+        // Load the configuration
+        print("Loading configuration...")
+        let data = try Data(contentsOf: config)
+        let decoder = JSONDecoder()
+        let configuration = try decoder.decode(Configuration.self, from: data)
+
         let snapshotURL = URL(fileURLWithPath: "snapshot")
 
         // Load the snapshot if it exists.
+        print("Loading state...")
         let oldState = if fileManager.fileExists(atPath: snapshotURL.path) {
             try BinaryDecoder().decode(State.self,
                                        from: try Data(contentsOf: snapshotURL))
@@ -58,15 +65,6 @@ struct Command: AsyncParsableCommand {
             State()
         }
         print(oldState.description)
-
-        // Load the email configuration
-        // TODO: Command line argument?
-        let configurationURL = URL(fileURLWithPath: "config.json")
-
-        print("Loading state...")
-        let data = try Data(contentsOf: configurationURL)
-        let decoder = JSONDecoder()
-        let configuration = try decoder.decode(Configuration.self, from: data)
 
         var newState = State()
 
