@@ -114,6 +114,36 @@ struct Command: AsyncParsableCommand {
 {% endfor %}
 """, context: context)
 
+        let htmlSummary = try environment.renderTemplate(string: """
+<html>
+    <ul>
+        {% for item in report %}
+            <li>
+                <strong>{{ item.url.path }}</strong>
+                <ul>
+                    <li>
+                        {{ item.changes.additions.count }} additions
+                        <ul>
+                            {% for addition in item.changes.additions %}
+                                <li>{{ addition }}</li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                    <li>
+                        {{ item.changes.deletions.count }} deletions
+                        <ul>
+                            {% for deletion in item.changes.deletions %}
+                                <li>{{ deletion }}</li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        {% endfor %}
+    </ul>
+</html>
+""", context: context)
+
         // Send a summary email.
         let smtp = SMTP(
             hostname: configuration.mailServer.host,
@@ -131,7 +161,8 @@ struct Command: AsyncParsableCommand {
             from: .init(email: configuration.mailServer.from),
             to: [.init(email: configuration.mailServer.to)],
             subject: "Syncthing Change Summary",
-            text: summary
+            text: summary,
+            attachments: [.init(htmlContent: htmlSummary)]
         )
 
         print("Sending email...")
