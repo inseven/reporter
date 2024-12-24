@@ -2,10 +2,16 @@ import Foundation
 
 import ArgumentParser
 import BinaryCodable
+import Stencil
 import SwiftSMTP
 
 enum ReporterError: Error {
     case failed
+}
+
+struct KeyedChanges {
+    let url: URL
+    let changes: Changes
 }
 
 @main
@@ -84,17 +90,35 @@ struct Command: AsyncParsableCommand {
         try encoder.encode(newState).write(to: snapshotURL)
 
         // Compare the snapshots for each folder.
-        var report: [(URL, Changes)] = []
+        var report: [KeyedChanges] = []
         for (url, snapshot) in newState.snapshots {
             print("Checking \(url)...")
             let oldSnapshot = oldState.snapshots[url] ?? State.Snapshot()
             let changes = snapshot.changes(from: oldSnapshot)
-            report.append((url, changes))
+            report.append(KeyedChanges(url: url, changes: changes))
         }
 
-        let summary = report.map { (url, changes) in
-            return url.path + "\n" + String(repeating: "-", count: url.path.count) + "\n\n" + String(describing: changes)
-        }.joined(separator: "\n")
+        // let summary = report.map { (url, changes) in
+        //     return url.path + "\n" + String(repeating: "-", count: url.path.count) + "\n\n" + String(describing: changes)
+        // }.joined(separator: "\n")
+
+
+        let environment = Environment()
+        let context: [String: Any] = ["name": "kyle", "report": report]
+        let summary = try environment.renderTemplate(string: """
+{% for item in report %}
+{{ item.url.path }}
+
+{{ item.changes.additions.count }} additions
+{% for addition in item.changes.additions %}{{ addition }}{% endfor %}
+
+{{ item.changes.deletions.count }} deletions
+{% for deletion in item.changes.deletions %}
+{{ deletion }}
+{% endfor %}
+
+{% endfor %}
+""", context: context)
 
         print(summary)
 
@@ -122,22 +146,6 @@ struct Command: AsyncParsableCommand {
         try await smtp.asyncSend(mail)
         print("Done!")
 
-    }
-
-}
-
-extension SMTP {
-
-    func asyncSend(_ mail: Mail) async throws {
-        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, any Error>) -> Void in
-            send(mail) { error in
-                if let error {
-                    continuation.resume(throwing: error)
-                } else {
-                    continuation.resume()
-                }
-            }
-        }
     }
 
 }

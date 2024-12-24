@@ -22,8 +22,8 @@ struct State: Codable, CustomStringConvertible {
             let additions = items.subtracting(initialState.items)
             let deletions = initialState.items.subtracting(items)
             return Changes(
-                additions: Set(additions.map { $0.path }),
-                deletions: Set(deletions.map { $0.path })
+                additions: additions.map { $0.path },
+                deletions: deletions.map { $0.path }
             )
         }
 

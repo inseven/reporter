@@ -2,8 +2,8 @@ import Foundation
 
 struct Changes: CustomStringConvertible {
 
-    let additions: Set<String>
-    let deletions: Set<String>
+    let additions: [String]
+    let deletions: [String]
 
     var description: String {
         return (
