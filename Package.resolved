@@ -1,5 +1,5 @@
 {
-  "originHash" : "54b558ea8b2512f6d9a6c2c8aa9716afbb738c3a3cee6eed96a81ca170b818d4",
+  "originHash" : "d9007bc749658e5980f9743c0e17bfe1982d3012c3ae0da0806333d41b6fb079",
   "pins" : [
     {
       "identity" : "binarycodable",
@@ -15,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Kitura/BlueCryptor.git",
       "state" : {
-        "revision" : "ee5880e031da4c609f372cf7472476ab51d5dd19",
-        "version" : "1.0.200"
+        "revision" : "cec97c24b111351e70e448972a7d3fe68a756d6d",
+        "version" : "2.0.2"
       }
     },
     {
@@ -24,8 +24,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Kitura/BlueSocket.git",
       "state" : {
-        "revision" : "c9894fd117457f1d006575fbfb2fdfd6f79eac03",
-        "version" : "1.0.200"
+        "revision" : "7b23a867008e0027bfd6f4d398d44720707bc8ca",
+        "version" : "2.0.4"
       }
     },
     {
@@ -33,8 +33,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Kitura/BlueSSLService.git",
       "state" : {
-        "revision" : "ae5889d2a8b068d2d3ab91ec73aa8f557c03cd8a",
-        "version" : "1.0.200"
+        "revision" : "b27a94d063962dfa1bba9f79814c4ef202cf33a4",
+        "version" : "2.0.2"
       }
     },
     {
@@ -44,6 +44,15 @@
       "state" : {
         "revision" : "e82d34eab3f0b05391082b11ea07d3b70d2f65bb",
         "version" : "1.9.200"
+      }
+    },
+    {
+      "identity" : "openssl",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Kitura/OpenSSL.git",
+      "state" : {
+        "revision" : "5dc8cb4f971135c17343e3c6df4f28904a0600e2",
+        "version" : "2.3.1"
       }
     },
     {
@@ -96,8 +105,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Kitura/Swift-SMTP",
       "state" : {
-        "revision" : "d892f67ddbdde635787a1f2f96e654e91a2edbaa",
-        "version" : "5.1.200"
+        "revision" : "4b7666bb8cee33f0cb367786af17b9a2ebb63047",
+        "version" : "6.0.0"
       }
     }
   ],

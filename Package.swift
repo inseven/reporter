@@ -11,7 +11,7 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/apple/swift-argument-parser", from: "1.3.0"),
         .package(url: "https://github.com/christophhagen/BinaryCodable", from: "3.0.0"),
-        .package(url: "https://github.com/Kitura/Swift-SMTP", .upToNextMinor(from: "5.1.0")),
+        .package(url: "https://github.com/Kitura/Swift-SMTP", from: "6.0.0"),
         .package(url: "https://github.com/stencilproject/Stencil.git", from: "0.15.1"),
     ],
     targets: [
