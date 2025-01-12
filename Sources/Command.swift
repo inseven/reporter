@@ -10,6 +10,8 @@ enum ReporterError: Error {
 }
 
 struct KeyedChanges {
+
+    let name: String
     let url: URL
     let changes: Changes
 }
@@ -33,7 +35,7 @@ struct Command: AsyncParsableCommand {
             options: [.skipsHiddenFiles, .skipsPackageDescendants]) else {
             print("Failed to create enumerator")
             throw ReporterError.failed
-       }
+        }
 
         for case let fileURL as URL in enumerator {
             do {
@@ -97,14 +99,14 @@ struct Command: AsyncParsableCommand {
             print("Checking \(url)...")
             let oldSnapshot = oldState.snapshots[url] ?? State.Snapshot()
             let changes = snapshot.changes(from: oldSnapshot)
-            report.append(KeyedChanges(url: url, changes: changes))
+            report.append(KeyedChanges(name: url.path, url: url, changes: changes))
         }
 
         let environment = Environment()
         let context: [String: Any] = ["report": report]
         let summary = try environment.renderTemplate(string: """
 {% for item in report %}
-{{ item.url.path }}
+{{ item.name }}
 
 {{ item.changes.additions.count }} additions
 {% for addition in item.changes.additions %}{{ addition }}{% endfor %}
@@ -122,7 +124,7 @@ struct Command: AsyncParsableCommand {
     <ul>
         {% for item in report %}
             <li>
-                <strong>{{ item.url.path }}</strong>
+                <strong>{{ item.name }}</strong>
                 <ul>
                     <li>
                         {{ item.changes.additions.count }} additions
