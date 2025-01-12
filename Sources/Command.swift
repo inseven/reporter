@@ -18,7 +18,10 @@ struct KeyedChanges {
 struct Command: AsyncParsableCommand {
 
     @Argument(transform: URL.init(fileURLWithPath:))
-    var config: URL
+    var config: URL?
+
+    @Argument(transform: URL.init(fileURLWithPath:))
+    var snapshot: URL?
 
     func snapshot(for path: URL) async throws -> State.Snapshot {
 
@@ -56,11 +59,11 @@ struct Command: AsyncParsableCommand {
 
         // Load the configuration
         print("Loading configuration...")
-        let data = try Data(contentsOf: config)
+        let data = try Data(contentsOf: config ?? .configURL)
         let decoder = JSONDecoder()
         let configuration = try decoder.decode(Configuration.self, from: data)
 
-        let snapshotURL = URL(fileURLWithPath: "snapshot")
+        let snapshotURL = snapshot ?? .snapshotURL
 
         // Load the snapshot if it exists.
         print("Loading state...")
