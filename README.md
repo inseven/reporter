@@ -22,13 +22,13 @@ swift build
 
 Settings are stored in `~/.config/reporter/config`. Mine looks something like this:
 
-```
+```json
 {
     "mailServer": {
 
         "host": "smtp.example.org",
         "port": 587,
-         "username": "email",
+        "username": "username",
         "password": "password",
 
         "domain": "server.example.org",
@@ -55,8 +55,12 @@ Settings are stored in `~/.config/reporter/config`. Mine looks something like th
 
 ## Schedule
 
-```
-0 3 * * * /home/jbmorley/bin/cronic-v3 /home/jbmorley/Projects/reporter/.build/debug/reporter
+Reporter does not currently provide built-in support for scheduling checks, instead deferring to external task runners like [`cron`](https://en.wikipedia.org/wiki/Cron).
+
+For example, my current configuration uses `cron` to schedule builds at 3am every morning:
+
+```plaintext
+0 3 * * * /home/jbmorley/Projects/reporter/.build/debug/reporter
 ```
 
-You might want to use something like [cronic](https://habilis.net/cronic/) to stop cron sending secondary emails.
+N.B. Depending on your server's mail configuration, you might want to use something like [cronic](https://habilis.net/cronic/) to quiet the output and stop `cron` sending mails unless there's an error.
