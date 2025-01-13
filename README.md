@@ -10,23 +10,9 @@ Most other change detection tools I've been able to find appear to be focused on
 
 _This is currently in active development so your mileage may vary, but I'd love your feedback and input if you try it out and find it useful._
 
-## Dependencies
+## Installation
 
-[mise-en-place](https://mise.jdx.dev) is a great tool for managing the Swift toolchain, especially on Linux:
-
-```shell
-curl https://mise.run | sh
-mise install swift
-```
-
-## Build
-
-```shell
-git clone git@github.com:inseven/reporter.git
-cd reporter
-swift build
-./.build/debug/reporter
-```
+There are currently no pre-built releases of Reporter. Check out the [Development](#development) section for details of how to build and run it yourself.
 
 ## Configuration
 
@@ -74,3 +60,25 @@ For example, my current configuration uses `cron` to schedule builds at 3am ever
 ```
 
 N.B. Depending on your server's mail configuration, you might want to use something like [cronic](https://habilis.net/cronic/) to quiet the output and stop `cron` sending mails unless there's an error.
+
+
+## Development
+
+### Dependencies
+
+[mise-en-place](https://mise.jdx.dev) is a great tool for managing the Swift toolchain, especially on Linux:
+
+```shell
+curl https://mise.run | sh
+mise install swift
+```
+
+### Build
+
+```shell
+git clone git@github.com:inseven/reporter.git
+cd reporter
+swift build
+./.build/debug/reporter
+```
+
