@@ -1,7 +1,5 @@
 /.build
-/config.json
 /Packages
-/snapshot
 
 .DS_Store
 .netrc

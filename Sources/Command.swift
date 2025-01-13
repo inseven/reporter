@@ -9,13 +9,6 @@ enum ReporterError: Error {
     case failed
 }
 
-struct KeyedChanges {
-
-    let name: String
-    let url: URL
-    let changes: Changes
-}
-
 @main
 struct Command: AsyncParsableCommand {
 
@@ -94,18 +87,24 @@ struct Command: AsyncParsableCommand {
         try encoder.encode(newState).write(to: snapshotURL)
 
         // Compare the snapshots for each folder.
-        var report: [KeyedChanges] = []
+        var report: Report = Report(folders: [])
         for (url, snapshot) in newState.snapshots {
             print("Checking \(url)...")
             let oldSnapshot = oldState.snapshots[url] ?? State.Snapshot()
             let changes = snapshot.changes(from: oldSnapshot)
-            report.append(KeyedChanges(name: url.path, url: url, changes: changes))
+            report.folders.append(KeyedChanges(name: url.path, url: url, changes: changes))
+        }
+
+        // Return early if there are no outstanding changes.
+        if report.isEmpty {
+            print("No changes detected; skipping report.")
+            return
         }
 
         let environment = Environment()
         let context: [String: Any] = ["report": report]
         let summary = try environment.renderTemplate(string: """
-{% for item in report %}
+{% for item in report.folders %}
 {{ item.name }}
 
 {{ item.changes.additions.count }} additions
@@ -122,7 +121,7 @@ struct Command: AsyncParsableCommand {
         let htmlSummary = try environment.renderTemplate(string: """
 <html>
     <ul>
-        {% for item in report %}
+        {% for item in report.folders %}
             <li>
                 <strong>{{ item.name }}</strong>
                 <ul>
