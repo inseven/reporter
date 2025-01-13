@@ -18,6 +18,41 @@ swift build
 ./.build/debug/reporter
 ```
 
+## Configuration
+
+Settings are stored in `~/.config/reporter/config`. Mine looks something like this:
+
+```
+{
+    "mailServer": {
+
+        "host": "smtp.example.org",
+        "port": 587,
+         "username": "email",
+        "password": "password",
+
+        "domain": "server.example.org",
+        "timeout": 30,
+
+        "from": "server@example.org",
+        "to": "admin@example.org",
+    },
+
+    "folders": {
+        "/mnt/usb0/Storage/Audiobooks": {},
+        "/mnt/usb0/Storage/Books": {},
+        "/mnt/usb0/Storage/Downloads": {},
+        "/mnt/usb0/Storage/Magazines": {},
+        "/mnt/usb0/Storage/Manuals": {},
+        "/mnt/usb0/Storage/Notes": {},
+        "/mnt/usb0/Storage/Paperwork": {},
+        "/mnt/usb0/Storage/Pictures": {},
+        "/mnt/usb0/Storage/Software": {}
+    }
+
+}
+```
+
 ## Schedule
 
 ```
