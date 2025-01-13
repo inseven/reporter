@@ -66,12 +66,7 @@ N.B. Depending on your server's mail configuration, you might want to use someth
 
 ### Dependencies
 
-[mise-en-place](https://mise.jdx.dev) is a great tool for managing the Swift toolchain, especially on Linux:
-
-```shell
-curl https://mise.run | sh
-mise install swift
-```
+Reporter is written in Swift. You can use tools like [`swiftenv`](https://swiftenv.fuller.li/en/latest/) and [mise-en-place](https://mise.jdx.dev) to manage the Swift toolchain on Linux and macOS.
 
 ### Build
 
@@ -82,3 +77,8 @@ swift build
 ./.build/debug/reporter
 ```
 
+### Run
+
+```shell
+swift run
+```
