@@ -4,6 +4,7 @@ struct State: Codable {
 
     struct Item: Codable, Hashable {
         let path: String
+        let checksum: Data?
     }
 
     struct Snapshot: Codable {

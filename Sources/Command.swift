@@ -2,11 +2,45 @@ import Foundation
 
 import ArgumentParser
 import BinaryCodable
+import Crypto
 import Stencil
 import SwiftSMTP
 
+#if os(Linux)
+  import Glibc
+#else
+  import Darwin
+#endif
+
 enum ReporterError: Error {
     case failed
+}
+
+func checksum(url: URL, bufferSize: Int = 4 * 1024 * 1024) throws -> Data {
+
+    let file = try FileHandle(forReadingFrom: url)
+    defer {
+        file.closeFile()
+    }
+
+    var md5 = Crypto.Insecure.MD5()
+    while true {
+        let data = file.readData(ofLength: bufferSize)
+        guard data.count > 0 else {
+            break
+        }
+        md5.update(data: data)
+    }
+
+    return Data(md5.finalize())
+}
+
+struct Shell {
+
+    static let isInteractive: Bool = {
+        return isatty(STDOUT_FILENO) == 1   
+    }()
+
 }
 
 @main
@@ -41,10 +75,31 @@ struct Command: AsyncParsableCommand {
             }
         }
 
+        // Generate the hashes for the files concurrently.
+        let items = try await withThrowingTaskGroup(of: State.Item.self) { group in
+            let progress = Progress(totalUnitCount: Int64(files.count))
+            for url in files {
+                group.addTask {
+                    return try await Task {
+                        let item = State.Item(path: url.path, checksum: try checksum(url: url))
+                        progress.completedUnitCount += 1
+                        if Shell.isInteractive {
+                            let percentage = Int(progress.fractionCompleted * 100)
+                            print("\(path.lastPathComponent): \(percentage)% (\(progress.completedUnitCount) / \(progress.totalUnitCount))")
+                        }
+                        return item
+                    }.value
+                }
+            }
+            var items: [State.Item] = []
+            for try await result in group {
+                items.append(result)
+            }
+            return items
+        }
+        
         // Create the snapshot
-        let snapshot = State.Snapshot(items: files.map { url in
-            return State.Item(path: url.path)
-        })
+        let snapshot = State.Snapshot(items: items)
 
         return snapshot
     }
@@ -75,7 +130,7 @@ struct Command: AsyncParsableCommand {
         for (folder, _) in configuration.folders {
 
             let url = URL(fileURLWithPath: (folder as NSString).expandingTildeInPath)
-            print("Indexing \(url)...")
+            print("Indexing '\(url.path)'...")
 
             // Get the new snapshot.
             newState.snapshots[url] = try await snapshot(for: url)
