@@ -1,17 +1,27 @@
 # Reporter
 
+File change monitor for macOS and Linux with built-in mailer
+
+## Overview
+
+Reporter is a lightweight command line utility that generates email reports showing all the file system changes since the last run. It is intended to pair with self-hosted file shares and network attached storage to improve visibility of file changes with minimum cognitive overhead.
+
+Most other change detection tools I've been able to find appear to be focused on integrity checks or more complaince-focused auditing. Conversely, my focus with Reporter is to create something that's easy to configure and offers more consumer-style reports---the sort of thing you might get from Dropbox or other centralized file sync services.
+
+_This is currently in active development so your mileage may vary, but I'd love your feedback and input if you try it out and find it useful._
+
 ## Dependencies
 
 [mise-en-place](https://mise.jdx.dev) is a great tool for managing the Swift toolchain, especially on Linux:
 
-```
+```shell
 curl https://mise.run | sh
 mise install swift
 ```
 
 ## Build
 
-```
+```shell
 git clone git@github.com:inseven/reporter.git
 cd reporter
 swift build
