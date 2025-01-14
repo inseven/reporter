@@ -16,7 +16,7 @@ There are currently no pre-built releases of Reporter. Check out the [Developmen
 
 ## Configuration
 
-Settings are stored in `~/.config/reporter/config`. Mine looks something like this:
+Settings are stored in `~/.config/reporter/config.json`. Mine looks something like this:
 
 ```json
 {
