@@ -129,8 +129,8 @@ struct Command: AsyncParsableCommand {
         // Iterate over the folders and index them.
         for (folder, _) in configuration.folders {
 
-            let url = URL(fileURLWithPath: (folder as NSString).expandingTildeInPath)
-            print("Indexing '\(url.path)'...")
+            let url = URL(fileURLWithPath: folder.expandingTildeInPath)
+            print("Indexing \(url)...")
 
             // Get the new snapshot.
             newState.snapshots[url] = try await snapshot(for: url)
