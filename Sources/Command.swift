@@ -175,31 +175,28 @@ struct Command: AsyncParsableCommand {
 
         let htmlSummary = try environment.renderTemplate(string: """
 <html>
-    <ul>
-        {% for item in report.folders %}
+    <h1>Change Report</h1>
+    {% for item in report.folders %}
+        <h2>{{ item.name }}</h2>
+        <ul>
             <li>
-                <strong>{{ item.name }}</strong>
+                {{ item.changes.additions.count }} additions
                 <ul>
-                    <li>
-                        {{ item.changes.additions.count }} additions
-                        <ul>
-                            {% for addition in item.changes.additions %}
-                                <li>{{ addition }}</li>
-                            {% endfor %}
-                        </ul>
-                    </li>
-                    <li>
-                        {{ item.changes.deletions.count }} deletions
-                        <ul>
-                            {% for deletion in item.changes.deletions %}
-                                <li>{{ deletion }}</li>
-                            {% endfor %}
-                        </ul>
-                    </li>
+                    {% for addition in item.changes.additions %}
+                        <li>{{ addition }}</li>
+                    {% endfor %}
                 </ul>
             </li>
-        {% endfor %}
-    </ul>
+            <li>
+                {{ item.changes.deletions.count }} deletions
+                <ul>
+                    {% for deletion in item.changes.deletions %}
+                        <li>{{ deletion }}</li>
+                    {% endfor %}
+                </ul>
+            </li>
+        </ul>
+    {% endfor %}
 </html>
 """, context: context)
 
@@ -219,7 +216,7 @@ struct Command: AsyncParsableCommand {
         let mail = Mail(
             from: .init(email: configuration.mailServer.from),
             to: [.init(email: configuration.mailServer.to)],
-            subject: "Syncthing Change Summary",
+            subject: "Change Report",
             text: summary,
             attachments: [.init(htmlContent: htmlSummary)]
         )
