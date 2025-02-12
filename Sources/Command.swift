@@ -40,7 +40,7 @@ func checksum(url: URL, bufferSize: Int = 4 * 1024 * 1024) throws -> Data {
 struct Shell {
 
     static let isInteractive: Bool = {
-        return isatty(STDOUT_FILENO) == 1   
+        return isatty(STDOUT_FILENO) == 1
     }()
 
 }
@@ -99,7 +99,7 @@ struct Command: AsyncParsableCommand {
             }
             return items
         }
-        
+
         // Create the snapshot
         let snapshot = State.Snapshot(items: items)
 
