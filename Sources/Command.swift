@@ -24,12 +24,14 @@ func checksum(url: URL, bufferSize: Int = 4 * 1024 * 1024) throws -> Data {
     }
 
     var md5 = Crypto.Insecure.MD5()
-    while true {
-        let data = file.readData(ofLength: bufferSize)
-        guard data.count > 0 else {
-            break
-        }
-        md5.update(data: data)
+    while autoreleasepool(invoking: {
+            let data = file.readData(ofLength: bufferSize)
+            guard data.count > 0 else {
+                return false
+            }
+            md5.update(data: data)
+            return true
+        }) {
     }
 
     return Data(md5.finalize())
