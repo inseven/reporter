@@ -193,7 +193,6 @@ struct Command: AsyncParsableCommand {
 
         let htmlSummary = try environment.renderTemplate(string: """
 <html>
-    <h1>Change Report</h1>
     {% for item in report.folders %}
         <h2>{{ item.name }}</h2>
         {% if item.changes.isEmpty %}
