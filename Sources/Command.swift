@@ -196,24 +196,28 @@ struct Command: AsyncParsableCommand {
     <h1>Change Report</h1>
     {% for item in report.folders %}
         <h2>{{ item.name }}</h2>
-        <ul>
-            <li>
-                {{ item.changes.additions.count }} additions
-                <ul>
-                    {% for addition in item.changes.additions %}
-                        <li>{{ addition }}</li>
-                    {% endfor %}
-                </ul>
-            </li>
-            <li>
-                {{ item.changes.deletions.count }} deletions
-                <ul>
-                    {% for deletion in item.changes.deletions %}
-                        <li>{{ deletion }}</li>
-                    {% endfor %}
-                </ul>
-            </li>
-        </ul>
+        {% if item.changes.isEmpty %}
+            <p>No changes.</p>
+        {% else %}
+            <ul>
+                <li>
+                    {{ item.changes.additions.count }} additions
+                    <ul>
+                        {% for addition in item.changes.additions %}
+                            <li>{{ addition }}</li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                <li>
+                    {{ item.changes.deletions.count }} deletions
+                    <ul>
+                        {% for deletion in item.changes.deletions %}
+                            <li>{{ deletion }}</li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            </ul>
+        {% endif %}
     {% endfor %}
 </html>
 """, context: context)
