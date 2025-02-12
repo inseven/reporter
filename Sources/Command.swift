@@ -12,10 +12,6 @@ import SwiftSMTP
   import Darwin
 #endif
 
-enum ReporterError: Error {
-    case failed
-}
-
 func checksum(url: URL, bufferSize: Int = 4 * 1024 * 1024) throws -> Data {
 
     let file = try FileHandle(forReadingFrom: url)
