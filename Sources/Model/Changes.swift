@@ -25,6 +25,8 @@ struct Changes: CustomStringConvertible {
     let additions: [String]
     let deletions: [String]
 
+    let isEmpty: Bool
+
     var description: String {
         return (
             "\(additions.count) additions\n" +
@@ -40,8 +42,10 @@ struct Changes: CustomStringConvertible {
         )
     }
 
-    var isEmpty: Bool {
-        return additions.isEmpty && deletions.isEmpty
+    init(additions: [String], deletions: [String]) {
+        self.additions = additions
+        self.deletions = deletions
+        self.isEmpty = additions.isEmpty && deletions.isEmpty
     }
 
 }
