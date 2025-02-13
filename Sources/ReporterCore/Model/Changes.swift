@@ -20,14 +20,14 @@
 
 import Foundation
 
-struct Changes: CustomStringConvertible {
+public struct Changes: CustomStringConvertible {
 
-    let additions: [String]
-    let deletions: [String]
+    public let additions: [String]
+    public let deletions: [String]
 
-    let isEmpty: Bool
+    public let isEmpty: Bool
 
-    var description: String {
+    public var description: String {
         return (
             "\(additions.count) additions\n" +
             additions
@@ -42,7 +42,7 @@ struct Changes: CustomStringConvertible {
         )
     }
 
-    init(additions: [String], deletions: [String]) {
+    public init(additions: [String], deletions: [String]) {
         self.additions = additions
         self.deletions = deletions
         self.isEmpty = additions.isEmpty && deletions.isEmpty
