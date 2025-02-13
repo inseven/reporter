@@ -32,6 +32,8 @@ import SwiftSMTP
   import Darwin
 #endif
 
+import ReporterCore
+
 func checksum(url: URL, bufferSize: Int = 4 * 1024 * 1024) throws -> Data {
 
     let file = try FileHandle(forReadingFrom: url)

@@ -38,15 +38,23 @@ let package = Package(
         .executableTarget(
             name: "reporter",
             dependencies: [
+                "ReporterCore",
+            ]
+        ),
+        .target(
+            name: "ReporterCore",
+            dependencies: [
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 .product(name: "BinaryCodable", package: "BinaryCodable"),
                 .product(name: "Stencil", package: "Stencil"),
                 .product(name: "SwiftSMTP", package: "Swift-SMTP"),
                 .product(name: "Crypto", package: "swift-crypto"),
-            ]
-        ),
+            ]),
         .testTarget(
-            name: "ReporterTests"
+            name: "ReporterTests",
+            dependencies: [
+                "ReporterCore",
+            ]
         )
     ]
 )
