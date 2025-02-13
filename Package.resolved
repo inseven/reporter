@@ -1,5 +1,5 @@
 {
-  "originHash" : "92f5492fd588801a5081c6ea552e669f6f0e40cbf3a4eb487ba1714d7e626cd2",
+  "originHash" : "99daf3024c03b3a91315c154170c50d06d5c4636e966c634e15cfff3bbe4448c",
   "pins" : [
     {
       "identity" : "binarycodable",
@@ -44,15 +44,6 @@
       "state" : {
         "revision" : "e82d34eab3f0b05391082b11ea07d3b70d2f65bb",
         "version" : "1.9.200"
-      }
-    },
-    {
-      "identity" : "openssl",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/Kitura/OpenSSL.git",
-      "state" : {
-        "revision" : "5dc8cb4f971135c17343e3c6df4f28904a0600e2",
-        "version" : "2.3.1"
       }
     },
     {
