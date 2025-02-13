@@ -213,6 +213,12 @@ struct Command: AsyncParsableCommand {
             </ul>
         {% endif %}
     {% endfor %}
+
+    <hr />
+
+    <p>
+        Generated using <a href="https://github.com/inseven/reporter">Reporter</a>.
+    </p>
 </html>
 """, context: context)
 
