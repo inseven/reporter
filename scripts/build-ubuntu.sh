@@ -20,7 +20,7 @@ if [ -d .build ] ; then
 fi
 
 # Run the tests.
-# swift test
+swift test
 
 # Build the project.
 swift build
