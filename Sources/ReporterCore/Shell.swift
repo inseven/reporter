@@ -20,9 +20,9 @@
 
 import Foundation
 
-struct Shell {
+public struct Shell {
 
-    static let isInteractive: Bool = {
+    public static let isInteractive: Bool = {
         return isatty(STDOUT_FILENO) == 1
     }()
 
