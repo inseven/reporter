@@ -20,6 +20,45 @@
 
 import Foundation
 
-enum ReporterError: Error {
-    case failed
+public struct State: Codable {
+
+    public struct Item: Codable, Hashable, Sendable {
+        public let path: String
+        public let checksum: Data?
+
+        public init(path: String, checksum: Data?) {
+            self.path = path
+            self.checksum = checksum
+        }
+    }
+
+    public struct Snapshot: Codable {
+
+        public var description: String {
+            return "\(items.count) files"
+        }
+
+        public let items: Set<Item>
+
+        public init(items: [Item] = []) {
+            self.items = Set(items)
+        }
+
+        public func changes(from initialState: Snapshot) -> Changes {
+            let additions = items.subtracting(initialState.items)
+            let deletions = initialState.items.subtracting(items)
+            return Changes(
+                additions: additions.map { $0.path },
+                deletions: deletions.map { $0.path }
+            )
+        }
+
+    }
+
+    public var snapshots: [URL: Snapshot]
+
+    public init() {
+        self.snapshots = [:]
+    }
+
 }

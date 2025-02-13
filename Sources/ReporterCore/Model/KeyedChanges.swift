@@ -20,14 +20,14 @@
 
 import Foundation
 
-struct KeyedChanges {
+public struct KeyedChanges {
 
-    let url: URL
-    let changes: Changes
-    let name: String
-    let path: String
+    public let url: URL
+    public let changes: Changes
+    public let name: String
+    public let path: String
 
-    init(url: URL, changes: Changes) {
+    public init(url: URL, changes: Changes) {
         self.url = url
         self.changes = changes
         self.name = url.lastPathComponent

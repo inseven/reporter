@@ -20,40 +20,18 @@
 
 import Foundation
 
-struct State: Codable {
+public struct Report {
 
-    struct Item: Codable, Hashable {
-        let path: String
-        let checksum: Data?
+    public var isEmpty: Bool {
+        return folders.reduce(true) { partialResult, folder in
+            return partialResult && folder.changes.isEmpty
+        }
     }
 
-    struct Snapshot: Codable {
+    public var folders: [KeyedChanges]
 
-        var description: String {
-            return "\(items.count) files"
-        }
-
-        let items: Set<Item>
-
-        init(items: [Item] = []) {
-            self.items = Set(items)
-        }
-
-        func changes(from initialState: Snapshot) -> Changes {
-            let additions = items.subtracting(initialState.items)
-            let deletions = initialState.items.subtracting(items)
-            return Changes(
-                additions: additions.map { $0.path },
-                deletions: deletions.map { $0.path }
-            )
-        }
-
-    }
-
-    var snapshots: [URL: Snapshot]
-
-    init() {
-        self.snapshots = [:]
+    public init(folders: [KeyedChanges]) {
+        self.folders = folders
     }
 
 }
