@@ -13,5 +13,6 @@ fi
 # Run the tests.
 swift test
 
-# Build the project.
+# Build the project (debug and release).
 swift build
+swift build -c release
