@@ -53,14 +53,6 @@ func checksum(url: URL, bufferSize: Int = 4 * 1024 * 1024) throws -> Data {
     return Data(md5.finalize())
 }
 
-struct Shell {
-
-    static let isInteractive: Bool = {
-        return isatty(STDOUT_FILENO) == 1
-    }()
-
-}
-
 @main
 struct Command: AsyncParsableCommand {
 
