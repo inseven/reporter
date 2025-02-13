@@ -157,7 +157,7 @@ struct Command: AsyncParsableCommand {
             print("Checking \(url)...")
             let oldSnapshot = oldState.snapshots[url] ?? State.Snapshot()
             let changes = snapshot.changes(from: oldSnapshot)
-            report.folders.append(KeyedChanges(name: url.path, url: url, changes: changes))
+            report.folders.append(KeyedChanges(url: url, changes: changes))
         }
 
         // Return early if there are no outstanding changes.
@@ -170,7 +170,7 @@ struct Command: AsyncParsableCommand {
         let context: [String: Any] = ["report": report]
         let summary = try environment.renderTemplate(string: """
 {% for item in report.folders %}
-{{ item.name }}
+{{ item.name }} ({{ item.path }})
 
 {{ item.changes.additions.count }} additions
 {% for addition in item.changes.additions %}{{ addition }}{% endfor %}
@@ -187,6 +187,7 @@ struct Command: AsyncParsableCommand {
 <html>
     {% for item in report.folders %}
         <h2>{{ item.name }}</h2>
+        <p>{{ item.path }}</p>
         {% if item.changes.isEmpty %}
             <p>No changes.</p>
         {% else %}

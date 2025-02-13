@@ -22,7 +22,16 @@ import Foundation
 
 struct KeyedChanges {
 
-    let name: String
     let url: URL
     let changes: Changes
+    let name: String
+    let path: String
+
+    init(url: URL, changes: Changes) {
+        self.url = url
+        self.changes = changes
+        self.name = url.lastPathComponent
+        self.path = url.path
+    }
+
 }
