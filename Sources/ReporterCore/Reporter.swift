@@ -138,7 +138,7 @@ public class Reporter {
         // Compare the snapshots for each folder.
         var report: Report = Report(folders: [])
         for (url, snapshot) in newState.snapshots {
-            print("Checking \(url)...")
+            print("Checking '\(url.path)'...")
             let oldSnapshot = oldState.snapshots[url] ?? State.Snapshot()
             let changes = snapshot.changes(from: oldSnapshot)
             report.folders.append(KeyedChanges(url: url, changes: changes))
