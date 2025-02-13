@@ -10,8 +10,11 @@ on:
   workflow_dispatch:
 
 jobs:
-  ubuntu-build:
-    runs-on: ubuntu-latest
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
 
     - name: Checkout repository
@@ -21,6 +24,11 @@ jobs:
         fetch-depth: 0
         lfs: true
 
+    - name: Install the tool dependencies
+      uses: jdx/mise-action@v2
+      with:
+        experimental: true
+
     - name: Build, test, and release
       run: |
-        scripts/build-ubuntu.sh
+        scripts/build.sh
