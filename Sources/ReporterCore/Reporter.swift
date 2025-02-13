@@ -25,9 +25,7 @@ import Crypto
 import Stencil
 import SwiftSMTP
 
-import ReporterCore
-
-class Reporter {
+public class Reporter {
 
     static func snapshot(for path: URL) async throws -> State.Snapshot {
 
@@ -102,7 +100,7 @@ class Reporter {
         return Data(md5.finalize())
     }
 
-    static func run(configurationURL: URL, snapshotURL: URL) async throws {
+    public static func run(configurationURL: URL, snapshotURL: URL) async throws {
         let fileManager = FileManager.default
 
         // Load the configuration
