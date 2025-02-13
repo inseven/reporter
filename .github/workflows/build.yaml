@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  ubuntu-build:
+  build:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
@@ -31,4 +31,4 @@ jobs:
 
     - name: Build, test, and release
       run: |
-        scripts/build-ubuntu.sh
+        scripts/build.sh
