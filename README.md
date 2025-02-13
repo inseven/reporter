@@ -1,6 +1,6 @@
 # Reporter
 
-File change monitor for macOS and Linux with built-in mailer
+File change report generator for macOS and Linux a with built-in mailer
 
 ## Overview
 
@@ -56,7 +56,7 @@ Reporter does not currently provide built-in support for scheduling checks, inst
 For example, my current configuration uses `cron` to schedule builds at 3am every morning:
 
 ```plaintext
-0 3 * * * /home/jbmorley/Projects/reporter/.build/debug/reporter
+0 3 * * * /home/jbmorley/Projects/reporter/.build/release/reporter
 ```
 
 N.B. Depending on your server's mail configuration, you might want to use something like [cronic](https://habilis.net/cronic/) to quiet the output and stop `cron` sending mails unless there's an error.
@@ -66,13 +66,17 @@ N.B. Depending on your server's mail configuration, you might want to use someth
 
 ### Dependencies
 
-Reporter is written in Swift. You can use tools like [`swiftenv`](https://swiftenv.fuller.li/en/latest/) and [mise-en-place](https://mise.jdx.dev) to manage the Swift toolchain on Linux and macOS.
-
-### Build
+Reporter is written in Swift. [mise-en-place](https://mise.jdx.dev) is used to manage the Swift toolchain on Linux and macOS.
 
 ```shell
 git clone git@github.com:inseven/reporter.git
 cd reporter
+mise install
+```
+
+### Build
+
+```shell
 swift build
 ./.build/debug/reporter
 ```
