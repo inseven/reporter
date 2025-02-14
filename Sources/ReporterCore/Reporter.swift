@@ -199,7 +199,7 @@ public class Reporter {
     <hr />
 
     <p>
-        Generated using <a href="https://github.com/inseven/reporter">Reporter</a>.
+        Generated with <a href="https://github.com/inseven/reporter">Reporter</a> by <a href="https://jbmorley.co.uk">Jason Morley</a>.
     </p>
 </html>
 """, context: context)
