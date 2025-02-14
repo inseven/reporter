@@ -27,7 +27,7 @@ import SwiftSMTP
 
 public class Reporter {
 
-    static func snapshot(for path: URL) async throws -> State.Snapshot {
+    static func snapshot(for path: URL, shell: Shell) async throws -> State.Snapshot {
 
         var files = [URL]()
 
@@ -35,7 +35,7 @@ public class Reporter {
             at: path,
             includingPropertiesForKeys: [.isRegularFileKey],
             options: [.skipsHiddenFiles, .skipsPackageDescendants]) else {
-            print("Failed to create enumerator")
+            shell.log("Failed to create enumerator")
             throw ReporterError.failed
         }
 
@@ -46,7 +46,8 @@ public class Reporter {
                     files.append(fileURL)
                 }
             } catch {
-                print(error, fileURL)
+                shell.log(error)
+                shell.log(fileURL)
             }
         }
 
@@ -58,10 +59,7 @@ public class Reporter {
                     return try await Task {
                         let item = State.Item(path: url.path, checksum: try Self.checksum(url: url))
                         progress.completedUnitCount += 1
-                        if Shell.isInteractive {
-                            let percentage = Int(progress.fractionCompleted * 100)
-                            print("\(path.lastPathComponent): \(percentage)% (\(progress.completedUnitCount) / \(progress.totalUnitCount))")
-                        }
+                        shell.progress(progress, message: path.lastPathComponent)
                         return item
                     }.value
                 }
@@ -103,14 +101,16 @@ public class Reporter {
     public static func run(configurationURL: URL, snapshotURL: URL) async throws {
         let fileManager = FileManager.default
 
+        let shell = Shell()
+
         // Load the configuration
-        print("Loading configuration...")
+        shell.log("Loading configuration...")
         let data = try Data(contentsOf: configurationURL)
         let decoder = JSONDecoder()
         let configuration = try decoder.decode(Configuration.self, from: data)
 
         // Load the snapshot if it exists.
-        print("Loading state...")
+        shell.log("Loading state...")
         let oldState = if fileManager.fileExists(atPath: snapshotURL.path) {
             try BinaryDecoder().decode(State.self,
                                        from: try Data(contentsOf: snapshotURL))
@@ -124,21 +124,21 @@ public class Reporter {
         for (folder, _) in configuration.folders {
 
             let url = URL(fileURLWithPath: folder.expandingTildeInPath)
-            print("Indexing \(url)...")
+            shell.log("Indexing '\(url.path)'...")
 
             // Get the new snapshot.
-            newState.snapshots[url] = try await Self.snapshot(for: url)
+            newState.snapshots[url] = try await Self.snapshot(for: url, shell: shell)
         }
 
         // Write the new state to disk.
-        print("Saving state...")
+        shell.log("Saving state...")
         let encoder = BinaryEncoder()
         try encoder.encode(newState).write(to: snapshotURL)
 
         // Compare the snapshots for each folder.
         var report: Report = Report(folders: [])
         for (url, snapshot) in newState.snapshots {
-            print("Checking '\(url.path)'...")
+            shell.log("Checking '\(url.path)'...")
             let oldSnapshot = oldState.snapshots[url] ?? State.Snapshot()
             let changes = snapshot.changes(from: oldSnapshot)
             report.folders.append(KeyedChanges(url: url, changes: changes))
@@ -146,7 +146,7 @@ public class Reporter {
 
         // Return early if there are no outstanding changes.
         if report.isEmpty {
-            print("No changes detected; skipping report.")
+            shell.log("No changes detected; skipping report.")
             return
         }
 
@@ -225,9 +225,9 @@ public class Reporter {
             attachments: [.init(htmlContent: htmlSummary)]
         )
 
-        print("Sending email...")
+        shell.log("Sending email...")
         try await smtp.asyncSend(mail)
-        print("Done!")
+        shell.log("Done!")
 
     }
 

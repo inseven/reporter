@@ -20,10 +20,48 @@
 
 import Foundation
 
-public struct Shell {
+#if os(Linux)
+    import Glibc
+#else
+    import Darwin.C
+#endif
 
-    public static let isInteractive: Bool = {
-        return isatty(STDOUT_FILENO) == 1
-    }()
+public class Shell: @unchecked Sendable {
+
+    let isInteractive: Bool
+
+    var isShowingProgress: Bool = false
+
+    init() {
+        self.isInteractive = isatty(STDOUT_FILENO) == 1
+    }
+
+    public func log(_ message: Sendable) {
+        DispatchQueue.main.async {
+            if self.isShowingProgress {
+                self.isShowingProgress = false
+                print("")
+            }
+            print(message)
+        }
+    }
+
+    func progress(_ progress: Progress, message: String) {
+        DispatchQueue.main.async {
+            guard self.isInteractive else {
+                return
+            }
+            self.isShowingProgress = true
+            let percentage = Int(progress.fractionCompleted * 100)
+            print("\r\(message): \(percentage)% (\(progress.completedUnitCount) / \(progress.totalUnitCount))",
+                  terminator: "")
+#if !os(Linux)
+            // TODO: Re-enable stdout flushing on Linux #32
+            //       https://github.com/inseven/reporter/issues/32
+            //       https://github.com/swiftlang/swift/issues/77866
+            fflush(stdout)
+#endif
+        }
+    }
 
 }
