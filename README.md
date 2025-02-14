@@ -71,6 +71,7 @@ Reporter is written in Swift. [mise-en-place](https://mise.jdx.dev) is used to m
 ```shell
 git clone git@github.com:inseven/reporter.git
 cd reporter
+git submodule update --init --recursive
 mise install
 ```
 
