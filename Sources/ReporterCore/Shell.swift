@@ -46,23 +46,19 @@ public class Shell: @unchecked Sendable {
         }
     }
 
-    func flush() {
-        fflush(stdout)
-    }
-
     func progress(_ progress: Progress, message: String) {
         DispatchQueue.main.async {
-            if self.isInteractive {
-                self.isShowingProgress = true
-                let percentage = Int(progress.fractionCompleted * 100)
-                print("\r\(message): \(percentage)% (\(progress.completedUnitCount) / \(progress.totalUnitCount))",
-                      terminator: "")
-//#if !os(Linux)
-                // TODO: https://github.com/swiftlang/swift/issues/77866
-//                fflush(stdout)
-                self.flush()
-//#endif
+            guard self.isInteractive else {
+                return
             }
+            self.isShowingProgress = true
+            let percentage = Int(progress.fractionCompleted * 100)
+            print("\r\(message): \(percentage)% (\(progress.completedUnitCount) / \(progress.totalUnitCount))",
+                  terminator: "")
+#if !os(Linux)
+            // TODO: https://github.com/swiftlang/swift/issues/77866
+            fflush(stdout)
+#endif
         }
     }
 
