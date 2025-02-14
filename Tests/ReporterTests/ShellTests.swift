@@ -1,8 +1,8 @@
 import Testing
 
-import ReporterCore
+@testable import ReporterCore
 
 @Test("Check the shell correctly detects interactive mode")
 func checkInteractiveShell() {
-    #expect(Shell.isInteractive == false)
+    #expect(Shell().isInteractive == false)
 }
