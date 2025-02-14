@@ -56,7 +56,9 @@ public class Shell: @unchecked Sendable {
             print("\r\(message): \(percentage)% (\(progress.completedUnitCount) / \(progress.totalUnitCount))",
                   terminator: "")
 #if !os(Linux)
-            // TODO: https://github.com/swiftlang/swift/issues/77866
+            // TODO: Re-enable stdout flushing on Linux #32
+            //       https://github.com/inseven/reporter/issues/32
+            //       https://github.com/swiftlang/swift/issues/77866
             fflush(stdout)
 #endif
         }
