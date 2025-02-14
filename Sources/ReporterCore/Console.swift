@@ -26,7 +26,7 @@ import Foundation
     import Darwin.C
 #endif
 
-public class Shell: @unchecked Sendable {
+public class Console: @unchecked Sendable {
 
     let isInteractive: Bool
 

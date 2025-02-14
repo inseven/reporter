@@ -27,7 +27,7 @@ import SwiftSMTP
 
 public class Reporter {
 
-    static func snapshot(for path: URL, shell: Shell) async throws -> State.Snapshot {
+    static func snapshot(path: URL, console: Console) async throws -> State.Snapshot {
 
         var files = [URL]()
 
@@ -35,7 +35,7 @@ public class Reporter {
             at: path,
             includingPropertiesForKeys: [.isRegularFileKey],
             options: [.skipsHiddenFiles, .skipsPackageDescendants]) else {
-            shell.log("Failed to create enumerator")
+            console.log("Failed to create enumerator")
             throw ReporterError.failed
         }
 
@@ -46,8 +46,8 @@ public class Reporter {
                     files.append(fileURL)
                 }
             } catch {
-                shell.log(error)
-                shell.log(fileURL)
+                console.log(error)
+                console.log(fileURL)
             }
         }
 
@@ -59,7 +59,7 @@ public class Reporter {
                     return try await Task {
                         let item = State.Item(path: url.path, checksum: try Self.checksum(url: url))
                         progress.completedUnitCount += 1
-                        shell.progress(progress, message: path.lastPathComponent)
+                        console.progress(progress, message: path.lastPathComponent)
                         return item
                     }.value
                 }
@@ -101,16 +101,16 @@ public class Reporter {
     public static func run(configurationURL: URL, snapshotURL: URL) async throws {
         let fileManager = FileManager.default
 
-        let shell = Shell()
+        let console = Console()
 
         // Load the configuration
-        shell.log("Loading configuration...")
+        console.log("Loading configuration...")
         let data = try Data(contentsOf: configurationURL)
         let decoder = JSONDecoder()
         let configuration = try decoder.decode(Configuration.self, from: data)
 
         // Load the snapshot if it exists.
-        shell.log("Loading state...")
+        console.log("Loading state...")
         let oldState = if fileManager.fileExists(atPath: snapshotURL.path) {
             try BinaryDecoder().decode(State.self,
                                        from: try Data(contentsOf: snapshotURL))
@@ -124,21 +124,21 @@ public class Reporter {
         for (folder, _) in configuration.folders {
 
             let url = URL(fileURLWithPath: folder.expandingTildeInPath)
-            shell.log("Indexing '\(url.path)'...")
+            console.log("Indexing '\(url.path)'...")
 
             // Get the new snapshot.
-            newState.snapshots[url] = try await Self.snapshot(for: url, shell: shell)
+            newState.snapshots[url] = try await Self.snapshot(path: url, console: console)
         }
 
         // Write the new state to disk.
-        shell.log("Saving state...")
+        console.log("Saving state...")
         let encoder = BinaryEncoder()
         try encoder.encode(newState).write(to: snapshotURL)
 
         // Compare the snapshots for each folder.
         var report: Report = Report(folders: [])
         for (url, snapshot) in newState.snapshots {
-            shell.log("Checking '\(url.path)'...")
+            console.log("Checking '\(url.path)'...")
             let oldSnapshot = oldState.snapshots[url] ?? State.Snapshot()
             let changes = snapshot.changes(from: oldSnapshot)
             report.folders.append(KeyedChanges(url: url, changes: changes))
@@ -146,7 +146,7 @@ public class Reporter {
 
         // Return early if there are no outstanding changes.
         if report.isEmpty {
-            shell.log("No changes detected; skipping report.")
+            console.log("No changes detected; skipping report.")
             return
         }
 
@@ -245,9 +245,9 @@ public class Reporter {
             attachments: [.init(htmlContent: htmlSummary)]
         )
 
-        shell.log("Sending email...")
+        console.log("Sending email...")
         try await smtp.asyncSend(mail)
-        shell.log("Done!")
+        console.log("Done!")
 
     }
 
