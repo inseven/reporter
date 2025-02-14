@@ -20,10 +20,43 @@
 
 import Foundation
 
-public struct Shell {
+#if os(Linux)
+    import Glibc
+#else
+    import Darwin.C
+#endif
 
-    public static let isInteractive: Bool = {
-        return isatty(STDOUT_FILENO) == 1
-    }()
+public class Shell: @unchecked Sendable {
+
+    let isInteractive: Bool
+
+    var isShowingProgress: Bool = false
+
+    init() {
+        self.isInteractive = isatty(STDOUT_FILENO) == 1
+    }
+
+    public func log(_ message: Sendable) {
+        DispatchQueue.main.async {
+            if self.isShowingProgress {
+                self.isShowingProgress = false
+                Swift.print("")
+            }
+            Swift.print(message)
+        }
+    }
+
+    func progress(_ progress: Progress, message: String) {
+        DispatchQueue.main.async {
+            fflush(stdout)
+            if self.isInteractive {
+                self.isShowingProgress = true
+                let percentage = Int(progress.fractionCompleted * 100)
+                Swift.print("\r\(message): \(percentage)% (\(progress.completedUnitCount) / \(progress.totalUnitCount))",
+                            terminator: "")
+                fflush(stdout)
+            }
+        }
+    }
 
 }
