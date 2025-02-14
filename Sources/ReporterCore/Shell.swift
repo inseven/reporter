@@ -40,21 +40,22 @@ public class Shell: @unchecked Sendable {
         DispatchQueue.main.async {
             if self.isShowingProgress {
                 self.isShowingProgress = false
-                Swift.print("")
+                print("")
             }
-            Swift.print(message)
+            print(message)
         }
     }
 
     func progress(_ progress: Progress, message: String) {
         DispatchQueue.main.async {
-            fflush(stdout)
             if self.isInteractive {
                 self.isShowingProgress = true
                 let percentage = Int(progress.fractionCompleted * 100)
-                Swift.print("\r\(message): \(percentage)% (\(progress.completedUnitCount) / \(progress.totalUnitCount))",
-                            terminator: "")
+                print("\r\(message): \(percentage)% (\(progress.completedUnitCount) / \(progress.totalUnitCount))",
+                      terminator: "")
+#if !os(Linux)
                 fflush(stdout)
+#endif
             }
         }
     }
