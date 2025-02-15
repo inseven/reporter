@@ -44,4 +44,10 @@ struct Configuration: Codable {
     let mailServer: Server
     let folders: [String: Policy]
 
+    init(contentsOf url: URL) throws {
+        let data = try Data(contentsOf: url)
+        let decoder = JSONDecoder()
+        self = try decoder.decode(Self.self, from: data)
+    }
+
 }

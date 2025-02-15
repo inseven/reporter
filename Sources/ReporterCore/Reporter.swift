@@ -98,20 +98,11 @@ public class Reporter {
         return Data(md5.finalize())
     }
 
-    public static func run(configurationURL: URL, snapshotURL: URL) async throws {
-        let fileManager = FileManager.default
-
-        let console = Console()
-
-        // Load the configuration
-        console.log("Loading configuration...")
-        let data = try Data(contentsOf: configurationURL)
-        let decoder = JSONDecoder()
-        let configuration = try decoder.decode(Configuration.self, from: data)
+    static func report(configuration: Configuration, snapshotURL: URL, console: Console) async throws -> Report {
 
         // Load the snapshot if it exists.
         console.log("Loading state...")
-        let oldState = if fileManager.fileExists(atPath: snapshotURL.path) {
+        let oldState = if FileManager.default.fileExists(atPath: snapshotURL.path) {
             try BinaryDecoder().decode(State.self,
                                        from: try Data(contentsOf: snapshotURL))
         } else {
@@ -143,6 +134,20 @@ public class Reporter {
             let changes = snapshot.changes(from: oldSnapshot)
             report.folders.append(KeyedChanges(url: url, changes: changes))
         }
+
+        return report
+    }
+
+    public static func run(configurationURL: URL, snapshotURL: URL) async throws {
+
+        let console = Console()
+
+        // Load the configuration.
+        console.log("Loading configuration...")
+        let configuration = try Configuration(contentsOf: configurationURL)
+
+        // Generate the report.
+        let report = try await report(configuration: configuration, snapshotURL: snapshotURL, console: console)
 
         // Return early if there are no outstanding changes.
         if report.isEmpty {
