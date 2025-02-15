@@ -178,53 +178,105 @@ public class Reporter {
         <meta name="color-scheme" content="light dark">
         <style type="text/css">
 
-            body {
-                background-color: #fff;
-                color: #000;
+            :root {
+                --primary-background-color: #fff;
+                --primary-foreground-color: #000;
+                --secondary-background-color: #f6f8fa;
+                --addition-background-color: #dafbe1;
+                --deletion-background-color: #ffebe9;
+                --border-color: #d1d9e0;
+                --padding: 0.5rem;
             }
 
             @media (prefers-color-scheme: dark) {
-                body {
-                    background-color: #181818;
-                    color: #fff;
+                :root {
+                    --primary-background-color: #181818;
+                    --primary-foreground-color: #fff;
+                    --secondary-background-color: #151b23;
+                    --addition-background-color: #2ea04326;
+                    --deletion-background-color: #f851491a;
+                    --border-color: #3d444d;
                 }
+            }            
+
+            body {
+                background-color: var(--primary-background-color);
+                color: var(--primary-foreground-color);
+            }
+
+            hr {
+                border: 0;
+                border-bottom: 1px solid var(--border-color);
+            }
+
+            footer {
+                color: #aaa;
+                text-align: center;
+            }
+
+            .folder {
+                border: 1px solid var(--border-color);
+                border-radius: 8px;
+                margin-bottom: 1rem;
+                overflow: hidden;
+            }
+
+            .folder header {
+                background-color: var(--secondary-background-color);
+                padding: calc(2 * var(--padding));
+            }
+
+            .folder header .name {
+                font-weight: bold;
+            }
+
+            ul.changes {
+                list-style: none;
+                margin: 0;
+                padding: 0;
+                border-top: 1px solid var(--border-color);
+            }
+
+            ul.changes li {
+                display: block;
+                padding: var(--padding) calc(2 * var(--padding));
+            }
+
+            .addition {
+                background-color: var(--addition-background-color);
+            }
+
+            .deletion {
+                background-color: var(--deletion-background-color);
             }
 
         </style>
     </head>
     <body>
         {% for item in report.folders %}
-            <h2>{{ item.name }}</h2>
-            <p>{{ item.path }}</p>
-            {% if item.changes.isEmpty %}
-                <p>No changes.</p>
-            {% else %}
-                <ul>
-                    <li>
-                        {{ item.changes.additions.count }} additions
-                        <ul>
-                            {% for addition in item.changes.additions %}
-                                <li>{{ addition }}</li>
-                            {% endfor %}
-                        </ul>
-                    </li>
-                    <li>
-                        {{ item.changes.deletions.count }} deletions
-                        <ul>
-                            {% for deletion in item.changes.deletions %}
-                                <li>{{ deletion }}</li>
-                            {% endfor %}
-                        </ul>
-                    </li>
-                </ul>
-            {% endif %}
+            <section class="folder">
+                <header>
+                    <div class="name">{{ item.name }}</div>
+                </header>
+                {% if item.changes.isEmpty %}{% else %}
+                    <ul class="changes">
+                        {% for addition in item.changes.additions %}
+                            <li class="addition">{{ addition }}</li>
+                        {% endfor %}
+                        {% for deletion in item.changes.deletions %}
+                            <li class="deletion">{{ deletion }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </section>
         {% endfor %}
 
-        <hr />
+        <footer>
+            <p>
+                Generated with <a href="https://github.com/inseven/reporter">Reporter</a> by <a href="https://jbmorley.co.uk">Jason Morley</a>.
+            </p>
+        </footer>
 
-        <p>
-            Generated with <a href="https://github.com/inseven/reporter">Reporter</a> by <a href="https://jbmorley.co.uk">Jason Morley</a>.
-        </p>
     </body>
 </html>
 """, context: context)
