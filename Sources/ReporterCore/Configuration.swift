@@ -46,6 +46,8 @@ struct Configuration: Codable {
         let from: User
         let to: [User]
 
+        let subject: String?
+
     }
 
     struct Policy: Codable {
