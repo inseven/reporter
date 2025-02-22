@@ -30,9 +30,23 @@ Settings are stored in `~/.config/reporter/config.json`. Mine looks something li
         "domain": "server.example.org",
         "timeout": 30,
 
-        "from": "server@example.org",
-        "to": "admin@example.org",
     },
+
+    "email": {
+
+        "from": {
+            "address": "server@example.org",
+            "name": "My Server"
+        },
+
+        "to": [
+            {
+                "address": "admin@example.org",
+                "name": "Example.org Admin"
+            }
+        ]
+
+    }
 
     "folders": {
         "/mnt/usb0/Storage/Audiobooks": {},
