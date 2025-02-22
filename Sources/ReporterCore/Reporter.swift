@@ -295,8 +295,8 @@ public class Reporter {
         )
 
         let mail = Mail(
-            from: .init(email: configuration.mailServer.from),
-            to: [.init(email: configuration.mailServer.to)],
+            from: .init(configuration.email.from),
+            to: configuration.email.to.map({ Mail.User($0) }),
             subject: "Change Report",
             text: summary,
             attachments: [.init(htmlContent: htmlSummary)]

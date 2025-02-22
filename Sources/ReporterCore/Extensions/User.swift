@@ -18,48 +18,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import Foundation
+import SwiftSMTP
 
-struct Configuration: Codable {
+extension Mail.User {
 
-    struct Server: Codable {
-
-        let host: String
-        let port: Int32
-        let username: String
-        let password: String
-
-        let domain: String
-        let timeout: UInt?
-
-    }
-
-    struct User: Codable {
-
-        let address: String
-        let name: String?
-
-    }
-
-    struct Email: Codable {
-
-        let from: User
-        let to: [User]
-
-    }
-
-    struct Policy: Codable {
-
-    }
-
-    let mailServer: Server
-    let email: Email
-    let folders: [String: Policy]
-
-    init(contentsOf url: URL) throws {
-        let data = try Data(contentsOf: url)
-        let decoder = JSONDecoder()
-        self = try decoder.decode(Self.self, from: data)
+    init(_ user: Configuration.User) {
+        self.init(name: user.name, email: user.address)
     }
 
 }
