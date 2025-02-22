@@ -297,7 +297,7 @@ public class Reporter {
         let mail = Mail(
             from: .init(configuration.email.from),
             to: configuration.email.to.map({ Mail.User($0) }),
-            subject: "Change Report",
+            subject: configuration.email.subject ?? "Change Report",
             text: summary,
             attachments: [.init(htmlContent: htmlSummary)]
         )
