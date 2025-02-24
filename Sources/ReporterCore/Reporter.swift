@@ -27,7 +27,7 @@ import SwiftSMTP
 
 public class Reporter {
 
-    static func snapshot(path: URL, console: Console) async throws -> State.Snapshot {
+    static func snapshot(path: URL, console: Console) async throws -> Snapshot {
 
         var files = [URL]()
 
@@ -52,19 +52,19 @@ public class Reporter {
         }
 
         // Generate the hashes for the files concurrently.
-        let items = try await withThrowingTaskGroup(of: State.Item.self) { group in
+        let items = try await withThrowingTaskGroup(of: Item.self) { group in
             let progress = Progress(totalUnitCount: Int64(files.count))
             for url in files {
                 group.addTask {
                     return try await Task {
-                        let item = State.Item(path: url.path, checksum: try Self.checksum(url: url))
+                        let item = Item(path: url.path, checksum: try Self.checksum(url: url))
                         progress.completedUnitCount += 1
                         console.progress(progress, message: path.lastPathComponent)
                         return item
                     }.value
                 }
             }
-            var items: [State.Item] = []
+            var items: [Item] = []
             for try await result in group {
                 items.append(result)
             }
@@ -72,7 +72,7 @@ public class Reporter {
         }
 
         // Create the snapshot
-        let snapshot = State.Snapshot(items: items)
+        let snapshot = Snapshot(items: items)
 
         return snapshot
     }
@@ -130,7 +130,7 @@ public class Reporter {
         var folders: [KeyedChanges] = []
         for (url, snapshot) in newState.snapshots {
             console.log("Checking '\(url.path)'...")
-            let oldSnapshot = oldState.snapshots[url] ?? State.Snapshot()
+            let oldSnapshot = oldState.snapshots[url] ?? Snapshot()
             let changes = snapshot.changes(from: oldSnapshot)
             folders.append(KeyedChanges(url: url, changes: changes))
         }

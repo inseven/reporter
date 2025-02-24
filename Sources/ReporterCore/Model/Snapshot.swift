@@ -20,12 +20,30 @@
 
 import Foundation
 
-public struct State: Codable {
+public struct Snapshot: Codable {
 
-    public var snapshots: [URL: Snapshot]
+    public var description: String {
+        return "\(items.count) files"
+    }
 
-    public init() {
-        self.snapshots = [:]
+    public let items: Set<Item>
+
+    public init(items: [Item] = []) {
+        self.items = Set(items)
+    }
+
+    public func changes(from initialState: Snapshot) -> Changes {
+        let additions = items.subtracting(initialState.items)
+        let deletions = initialState.items.subtracting(items)
+        return Changes(
+            additions: additions
+                .map { $0.path }
+                .sorted { $0.localizedStandardCompare($1) == .orderedAscending },
+            deletions: deletions
+                .map { $0.path }
+                .sorted { $0.localizedStandardCompare($1) == .orderedAscending }
+
+        )
     }
 
 }
