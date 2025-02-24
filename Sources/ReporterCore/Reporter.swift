@@ -127,13 +127,14 @@ public class Reporter {
         try encoder.encode(newState).write(to: snapshotURL)
 
         // Compare the snapshots for each folder.
-        var report: Report = Report(folders: [])
+        var folders: [KeyedChanges] = []
         for (url, snapshot) in newState.snapshots {
             console.log("Checking '\(url.path)'...")
             let oldSnapshot = oldState.snapshots[url] ?? State.Snapshot()
             let changes = snapshot.changes(from: oldSnapshot)
-            report.folders.append(KeyedChanges(url: url, changes: changes))
+            folders.append(KeyedChanges(url: url, changes: changes))
         }
+        let report: Report = Report(folders: folders)
 
         return report
     }
