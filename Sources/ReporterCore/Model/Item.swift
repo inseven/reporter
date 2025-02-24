@@ -20,12 +20,12 @@
 
 import Foundation
 
-public struct State: Codable {
+public struct Item: Codable, Hashable, Sendable {
+    public let path: String
+    public let checksum: Data?
 
-    public var snapshots: [URL: Snapshot]
-
-    public init() {
-        self.snapshots = [:]
+    public init(path: String, checksum: Data?) {
+        self.path = path
+        self.checksum = checksum
     }
-
 }
