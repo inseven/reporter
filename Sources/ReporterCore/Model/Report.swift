@@ -28,10 +28,10 @@ public struct Report {
         }
     }
 
-    public var folders: [KeyedChanges]
+    public let folders: [KeyedChanges]
 
     public init(folders: [KeyedChanges]) {
-        self.folders = folders
+        self.folders = folders.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
     }
 
 }
