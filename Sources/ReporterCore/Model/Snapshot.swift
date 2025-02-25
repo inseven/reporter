@@ -36,8 +36,10 @@ public struct Snapshot: Codable {
 
     public func changes(from initialState: Snapshot) -> Changes {
         let additions = items.subtracting(initialState.items)
+            .map { Change(kind: .addition, source: $0) }
         let deletions = initialState.items.subtracting(items)
-        return Changes(additions: Array(additions), deletions: Array(deletions))
+            .map { Change(kind: .deletion, source: $0) }
+        return Changes(changes: Array(additions) + Array(deletions))
     }
 
 }

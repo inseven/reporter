@@ -284,11 +284,12 @@ public class Reporter {
                 </header>
                 {% if item.changes.isEmpty %}{% else %}
                     <ul class="changes">
-                        {% for addition in item.changes.additions %}
-                            <li class="addition">{{ addition.path }}</li>
-                        {% endfor %}
-                        {% for deletion in item.changes.deletions %}
-                            <li class="deletion">{{ deletion.path }}</li>
+                        {% for change in item.changes.changes %}
+                            {% if change.isAddition %}
+                                <li class="addition">{{ change.source.path }}</li>
+                            {% else %}
+                                <li class="deletion">{{ change.source.path }}</li>
+                            {% endif %}
                         {% endfor %}
                     </ul>
                 {% endif %}
