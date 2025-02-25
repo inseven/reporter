@@ -25,4 +25,17 @@ extension URL {
     public static let configURL = URL(fileURLWithPath: "~/.config/reporter/config.json".expandingTildeInPath)
     public static let snapshotURL = URL(fileURLWithPath: "~/.config/reporter/snapshot".expandingTildeInPath)
 
+    func path(relativeTo baseURL: URL, percentEncoded: Bool = true) throws -> String {
+        guard baseURL.hasDirectoryPath else {
+            throw ReporterError.notDirectory
+        }
+        // We use `.path(percentEncoded:)` instead of `.path` here as it ensures we have a trailing slash.
+        let basePath = baseURL.path(percentEncoded: percentEncoded)
+        let path = self.path(percentEncoded: percentEncoded)
+        guard path.starts(with: basePath) else {
+            throw ReporterError.differentBasePaths
+        }
+        return String(path.dropFirst(basePath.count))
+    }
+
 }

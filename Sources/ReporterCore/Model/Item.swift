@@ -21,6 +21,7 @@
 import Foundation
 
 public struct Item: Codable, Hashable, Sendable {
+
     public let path: String
     public let checksum: Data?
 
@@ -28,4 +29,5 @@ public struct Item: Codable, Hashable, Sendable {
         self.path = path
         self.checksum = checksum
     }
+
 }

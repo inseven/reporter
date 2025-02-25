@@ -22,4 +22,7 @@ import Foundation
 
 public enum ReporterError: Error {
     case failed
+    case notDirectory
+    case differentBasePaths
+    case notExists
 }

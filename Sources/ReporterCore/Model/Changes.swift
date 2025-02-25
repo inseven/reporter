@@ -22,8 +22,8 @@ import Foundation
 
 public struct Changes: CustomStringConvertible {
 
-    public let additions: [String]
-    public let deletions: [String]
+    public let additions: [Item]
+    public let deletions: [Item]
 
     public let isEmpty: Bool
 
@@ -31,20 +31,20 @@ public struct Changes: CustomStringConvertible {
         return (
             "\(additions.count) additions\n" +
             additions
-                .sorted()
-                .map { "  \($0)\n" }
+                .map { "  \($0.path)\n" }
                 .joined() +
             "\(deletions.count) deletions\n" +
             deletions
-                .sorted()
-                .map { "  \($0)\n" }
+                .map { "  \($0.path)\n" }
                 .joined()
         )
     }
 
-    public init(additions: [String], deletions: [String]) {
+    public init(additions: [Item], deletions: [Item]) {
         self.additions = additions
+                .sorted { $0.path.localizedStandardCompare($1.path) == .orderedAscending }
         self.deletions = deletions
+                .sorted { $0.path.localizedStandardCompare($1.path) == .orderedAscending }
         self.isEmpty = additions.isEmpty && deletions.isEmpty
     }
 
