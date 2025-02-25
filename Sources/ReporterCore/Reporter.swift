@@ -37,12 +37,12 @@ public class Reporter {
         }
 
         // Check that the path exists and is a directory.
-        var isDirectory: Bool = false
+        var isDirectory: ObjCBool = false
         guard fileManager.fileExists(atPath: folderURL.path, isDirectory: &isDirectory)
         else {
             throw ReporterError.notExists
         }
-        guard isDirectory else {
+        guard isDirectory.boolValue else {
             throw ReporterError.notDirectory
         }
 
