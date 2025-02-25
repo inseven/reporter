@@ -20,12 +20,19 @@
 
 import Foundation
 
+import BinaryCodable
+
 public struct State: Codable {
 
     public var snapshots: [URL: Snapshot]
 
     public init() {
         self.snapshots = [:]
+    }
+
+    public init(contentsOf url: URL) throws {
+        let decoder = BinaryDecoder()
+        self = try decoder.decode(State.self, from: try Data(contentsOf: url))
     }
 
 }

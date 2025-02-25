@@ -25,7 +25,7 @@ import PackageDescription
 let package = Package(
     name: "reporter",
     platforms: [
-        .macOS(.v12),
+        .macOS(.v13),
     ],
     dependencies: [
         .package(path: "dependencies/Swift-SMTP"),

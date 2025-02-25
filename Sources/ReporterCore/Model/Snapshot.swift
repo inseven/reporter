@@ -26,24 +26,18 @@ public struct Snapshot: Codable {
         return "\(items.count) files"
     }
 
+    public let rootURL: URL
     public let items: Set<Item>
 
-    public init(items: [Item] = []) {
+    public init(rootURL: URL, items: [Item] = []) {
+        self.rootURL = rootURL
         self.items = Set(items)
     }
 
     public func changes(from initialState: Snapshot) -> Changes {
         let additions = items.subtracting(initialState.items)
         let deletions = initialState.items.subtracting(items)
-        return Changes(
-            additions: additions
-                .map { $0.path }
-                .sorted { $0.localizedStandardCompare($1) == .orderedAscending },
-            deletions: deletions
-                .map { $0.path }
-                .sorted { $0.localizedStandardCompare($1) == .orderedAscending }
-
-        )
+        return Changes(additions: Array(additions), deletions: Array(deletions))
     }
 
 }

@@ -27,12 +27,29 @@ import SwiftSMTP
 
 public class Reporter {
 
-    static func snapshot(path: URL, console: Console) async throws -> Snapshot {
+    static func snapshot(folderURL: URL, console: Console) async throws -> Snapshot {
 
-        var files = [URL]()
+        let fileManager = FileManager.default
 
-        guard let enumerator = FileManager.default.enumerator(
-            at: path,
+        // Check that we've been given a directory URL.
+        guard folderURL.hasDirectoryPath else {
+            throw ReporterError.notDirectory
+        }
+
+        // Check that the path exists and is a directory.
+        var isDirectory: ObjCBool = false
+        guard fileManager.fileExists(atPath: folderURL.path, isDirectory: &isDirectory)
+        else {
+            throw ReporterError.notExists
+        }
+        guard isDirectory.boolValue else {
+            throw ReporterError.notDirectory
+        }
+
+        var files = [String]()
+
+        guard let enumerator = fileManager.enumerator(
+            at: folderURL,
             includingPropertiesForKeys: [.isRegularFileKey],
             options: [.skipsHiddenFiles, .skipsPackageDescendants]) else {
             console.log("Failed to create enumerator")
@@ -43,9 +60,11 @@ public class Reporter {
             do {
                 let fileAttributes = try fileURL.resourceValues(forKeys:[.isRegularFileKey])
                 if fileAttributes.isRegularFile! {
-                    files.append(fileURL)
+                    files.append(try fileURL.path(relativeTo: folderURL,
+                                                  percentEncoded: false))
                 }
             } catch {
+                // TODO: Review these errors.
                 console.log(error)
                 console.log(fileURL)
             }
@@ -54,12 +73,14 @@ public class Reporter {
         // Generate the hashes for the files concurrently.
         let items = try await withThrowingTaskGroup(of: Item.self) { group in
             let progress = Progress(totalUnitCount: Int64(files.count))
-            for url in files {
+            for relativePath in files {
                 group.addTask {
                     return try await Task {
-                        let item = Item(path: url.path, checksum: try Self.checksum(url: url))
+                        let url = URL(fileURLWithPath: relativePath, relativeTo: folderURL)
+                        let item = Item(path: relativePath,
+                                        checksum: try Self.checksum(url: url))
                         progress.completedUnitCount += 1
-                        console.progress(progress, message: path.lastPathComponent)
+                        console.progress(progress, message: folderURL.lastPathComponent)
                         return item
                     }.value
                 }
@@ -72,7 +93,7 @@ public class Reporter {
         }
 
         // Create the snapshot
-        let snapshot = Snapshot(items: items)
+        let snapshot = Snapshot(rootURL: folderURL, items: items)
 
         return snapshot
     }
@@ -103,8 +124,7 @@ public class Reporter {
         // Load the snapshot if it exists.
         console.log("Loading state...")
         let oldState = if FileManager.default.fileExists(atPath: snapshotURL.path) {
-            try BinaryDecoder().decode(State.self,
-                                       from: try Data(contentsOf: snapshotURL))
+            try State(contentsOf: snapshotURL)
         } else {
             State()
         }
@@ -114,11 +134,12 @@ public class Reporter {
         // Iterate over the folders and index them.
         for (folder, _) in configuration.folders {
 
-            let url = URL(fileURLWithPath: folder.expandingTildeInPath)
+            let url = URL(fileURLWithPath: folder.expandingTildeInPath, isDirectory: true)
             console.log("Indexing '\(url.path)'...")
 
             // Get the new snapshot.
-            newState.snapshots[url] = try await Self.snapshot(path: url, console: console)
+            let snapshot = try await Self.snapshot(folderURL: url, console: console)
+            newState.snapshots[url] = snapshot
         }
 
         // Write the new state to disk.
@@ -130,7 +151,7 @@ public class Reporter {
         var folders: [KeyedChanges] = []
         for (url, snapshot) in newState.snapshots {
             console.log("Checking '\(url.path)'...")
-            let oldSnapshot = oldState.snapshots[url] ?? Snapshot()
+            let oldSnapshot = oldState.snapshots[url] ?? Snapshot(rootURL: url)
             let changes = snapshot.changes(from: oldSnapshot)
             folders.append(KeyedChanges(url: url, changes: changes))
         }
@@ -163,11 +184,13 @@ public class Reporter {
 {{ item.name }} ({{ item.path }})
 
 {{ item.changes.additions.count }} additions
-{% for addition in item.changes.additions %}{{ addition }}{% endfor %}
+{% for addition in item.changes.additions %}
+{{ addition.path }}
+{% endfor %}
 
 {{ item.changes.deletions.count }} deletions
 {% for deletion in item.changes.deletions %}
-{{ deletion }}
+{{ deletion.path }}
 {% endfor %}
 
 {% endfor %}
@@ -262,10 +285,10 @@ public class Reporter {
                 {% if item.changes.isEmpty %}{% else %}
                     <ul class="changes">
                         {% for addition in item.changes.additions %}
-                            <li class="addition">{{ addition }}</li>
+                            <li class="addition">{{ addition.path }}</li>
                         {% endfor %}
                         {% for deletion in item.changes.deletions %}
-                            <li class="deletion">{{ deletion }}</li>
+                            <li class="deletion">{{ deletion.path }}</li>
                         {% endfor %}
                     </ul>
                 {% endif %}
