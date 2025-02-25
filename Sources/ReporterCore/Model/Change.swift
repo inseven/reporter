@@ -20,25 +20,27 @@
 
 import Foundation
 
-public struct Changes: CustomStringConvertible {
+public struct Change {
 
-    public let changes: [Change]
-
-    public let isEmpty: Bool
-
-    public var description: String {
-        return (
-            "\(changes.count) changes\n" +
-            changes
-                .map { "  \($0.source.path)\n" }
-                .joined()
-        )
+    enum Kind {
+        case addition
+        case deletion
     }
 
-    public init(changes: [Change]) {
-        self.changes = changes
-            .sorted { $0.source.path.localizedStandardCompare($1.source.path) == .orderedAscending }
-        self.isEmpty = changes.isEmpty
+    let kind: Kind
+    let source: Item
+    let destination: Item?
+    
+    let isAddition: Bool
+    let isDeletion: Bool
+
+    init(kind: Kind, source: Item, destination: Item? = nil) {
+        self.kind = kind
+        self.source = source
+        self.destination = destination
+        
+        self.isAddition = kind == .addition
+        self.isDeletion = kind == .deletion
     }
 
 }
