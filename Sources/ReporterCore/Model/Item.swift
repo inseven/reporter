@@ -34,9 +34,9 @@ public struct Item: Codable, Hashable, Sendable {
     public let fileSize: Int
 
     public var fileDetails: FileDetails {
-        return FileDetails(relativePath: path,
-                           contentModificationTime: contentModificationTime,
-                           fileSize: fileSize)
+        return .init(relativePath: path,
+                     contentModificationTime: contentModificationTime,
+                     fileSize: fileSize)
     }
     
     public let checksum: Data?
@@ -72,29 +72,4 @@ public struct Item: Codable, Hashable, Sendable {
         try container.encode(checksum, forKey: CodingKeys.checksum)
     }
 
-}
-
-// https://stackoverflow.com/questions/43241845/how-can-i-convert-data-into-types-like-doubles-ints-and-strings-in-swift#43244973
-
-extension DataProtocol where Self: RangeReplaceableCollection {
-    init<N: Numeric>(_ numeric: N) {
-        self = withUnsafeBytes(of: numeric) { .init($0) }
-    }
-}
-
-extension Numeric {
-    var data: Data { .init(self) }
-    var bytes: [UInt8] { .init(self) }
-}
-
-extension Numeric {
-    init<D: DataProtocol>(_ data: D) {
-        var value: Self = .zero
-        _ = withUnsafeMutableBytes(of: &value, data.copyBytes)
-        self = value
-    }
-}
-
-extension DataProtocol {
-    func value<N: Numeric>() -> N { .init(self) }
 }
