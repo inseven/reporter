@@ -25,9 +25,13 @@ import Crypto
 import Stencil
 import SwiftSMTP
 
+typealias Cache = [FileDetails: Data]
+
 public class Reporter {
 
-    static func snapshot(folderURL: URL, console: Console) async throws -> Snapshot {
+    static func snapshot(folderURL: URL,
+                         cache: Cache,
+                         console: Console) async throws -> Snapshot {
 
         let fileManager = FileManager.default
 
@@ -46,8 +50,9 @@ public class Reporter {
             throw ReporterError.notDirectory
         }
 
-        var files = [String]()
-
+        // TODO: Extract this into a custom enumerator?
+        // TODO: Check if I can get this directly from the enumerator?
+        var files: [FileDetails] = []
         guard let enumerator = fileManager.enumerator(
             at: folderURL,
             includingPropertiesForKeys: [.isRegularFileKey],
@@ -55,13 +60,21 @@ public class Reporter {
             console.log("Failed to create enumerator")
             throw ReporterError.failed
         }
-
         for case let fileURL as URL in enumerator {
             do {
-                let fileAttributes = try fileURL.resourceValues(forKeys:[.isRegularFileKey])
+                let fileAttributes = try fileURL.resourceValues(forKeys: [
+                    .isRegularFileKey,
+                    .fileSizeKey,
+                    .contentModificationDateKey,
+                    .fileSizeKey
+                ])
                 if fileAttributes.isRegularFile! {
-                    files.append(try fileURL.path(relativeTo: folderURL,
-                                                  percentEncoded: false))
+                    files.append(FileDetails(
+                        relativePath: try fileURL.path(relativeTo: folderURL,
+                                                       percentEncoded: false),
+                        contentModificationTime: fileAttributes.contentModificationDate!.timeIntervalSince1970,
+                        fileSize: fileAttributes.fileSize!
+                    ))
                 }
             } catch {
                 // TODO: Review these errors.
@@ -73,12 +86,18 @@ public class Reporter {
         // Generate the hashes for the files concurrently.
         let items = try await withThrowingTaskGroup(of: Item.self) { group in
             let progress = Progress(totalUnitCount: Int64(files.count))
-            for relativePath in files {
+            for fileDetails in files {
                 group.addTask {
                     return try await Task {
-                        let url = URL(fileURLWithPath: relativePath, relativeTo: folderURL)
-                        let item = Item(path: relativePath,
-                                        checksum: try Self.checksum(url: url))
+                        let url = URL(fileURLWithPath: fileDetails.relativePath,
+                                      relativeTo: folderURL)
+                        let checksum = try (cache[fileDetails] ?? Self.checksum(url: url))
+                        let item = Item(
+                            path: fileDetails.relativePath,
+                            contentModificationTime: fileDetails.contentModificationTime,
+                            fileSize: fileDetails.fileSize,
+                            checksum: checksum
+                        )
                         progress.completedUnitCount += 1
                         console.progress(progress, message: folderURL.lastPathComponent)
                         return item
@@ -99,12 +118,12 @@ public class Reporter {
     }
 
     static func checksum(url: URL, bufferSize: Int = 4 * 1024 * 1024) throws -> Data {
-
+    
         let file = try FileHandle(forReadingFrom: url)
         defer {
             file.closeFile()
         }
-
+        
         var md5 = Crypto.Insecure.MD5()
         while autoreleasepool(invoking: {
                 let data = file.readData(ofLength: bufferSize)
@@ -119,7 +138,9 @@ public class Reporter {
         return Data(md5.finalize())
     }
 
-    static func report(configuration: Configuration, snapshotURL: URL, console: Console) async throws -> Report {
+    static func report(configuration: Configuration,
+                       snapshotURL: URL,
+                       console: Console) async throws -> Report {
 
         // Load the snapshot if it exists.
         console.log("Loading state...")
@@ -137,8 +158,17 @@ public class Reporter {
             let url = URL(fileURLWithPath: folder.expandingTildeInPath, isDirectory: true)
             console.log("Indexing '\(url.path)'...")
 
+            let items = oldState.snapshots[url]?.items ?? []
+            let cache = items.reduce(into: Cache()) { partialResult, item in
+                partialResult[item.fileDetails] = item.checksum
+            }
+
+            // let cache = Cache()
+
             // Get the new snapshot.
-            let snapshot = try await Self.snapshot(folderURL: url, console: console)
+            let snapshot = try await Self.snapshot(folderURL: url,
+                                                   cache: cache,
+                                                   console: console)
             newState.snapshots[url] = snapshot
         }
 
@@ -169,7 +199,9 @@ public class Reporter {
         let configuration = try Configuration(contentsOf: configurationURL)
 
         // Generate the report.
-        let report = try await report(configuration: configuration, snapshotURL: snapshotURL, console: console)
+        let report = try await report(configuration: configuration,
+                                      snapshotURL: snapshotURL,
+                                      console: console)
 
         // Return early if there are no outstanding changes.
         if report.isEmpty {
