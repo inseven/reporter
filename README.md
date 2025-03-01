@@ -92,12 +92,21 @@ mise install
 ### Build
 
 ```shell
-swift build
-./.build/debug/reporter
+./scripts/build.sh
 ```
+
+Under the hood, this runs `swift test`, `swift build`, and `swift build -c release`.
 
 ### Run
 
+Use the `swift` compiler:
+
 ```shell
 swift run
+```
+
+Or run the result of `build.sh` (above) directly:
+
+```shell
+.build/release/reporter
 ```
