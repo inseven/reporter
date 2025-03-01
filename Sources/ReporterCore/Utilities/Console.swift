@@ -18,13 +18,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import Foundation
-
 #if os(Linux)
-    import Glibc
+    @preconcurrency import Glibc
 #else
     import Darwin.C
 #endif
+
+import Foundation
 
 public class Console: @unchecked Sendable {
 
@@ -55,12 +55,7 @@ public class Console: @unchecked Sendable {
             let percentage = Int(progress.fractionCompleted * 100)
             print("\r\(message): \(percentage)% (\(progress.completedUnitCount) / \(progress.totalUnitCount))",
                   terminator: "")
-#if !os(Linux)
-            // TODO: Re-enable stdout flushing on Linux #32
-            //       https://github.com/inseven/reporter/issues/32
-            //       https://github.com/swiftlang/swift/issues/77866
             fflush(stdout)
-#endif
         }
     }
 
