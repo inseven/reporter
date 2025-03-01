@@ -92,7 +92,7 @@ mise install
 ### Build
 
 ```shell
-./scripts/build.sh
+scripts/build.sh
 ```
 
 Under the hood, this runs `swift test`, `swift build`, and `swift build -c release`.
