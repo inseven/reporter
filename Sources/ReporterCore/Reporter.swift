@@ -60,7 +60,7 @@ public class Reporter {
             console.log("Failed to create enumerator")
             throw ReporterError.failed
         }
-        for case let fileURL as URL in enumerator {
+        for case let fileURL as URL in enumerator.allObjects {
             do {
                 let fileAttributes = try fileURL.resourceValues(forKeys: [
                     .isRegularFileKey,
