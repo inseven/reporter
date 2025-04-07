@@ -163,8 +163,6 @@ public class Reporter {
                 partialResult[item.fileDetails] = item.checksum
             }
 
-            // let cache = Cache()
-
             // Get the new snapshot.
             let snapshot = try await Self.snapshot(folderURL: url,
                                                    cache: cache,
