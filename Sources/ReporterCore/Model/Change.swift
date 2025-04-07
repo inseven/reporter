@@ -20,7 +20,7 @@
 
 import Foundation
 
-public struct Change {
+public struct Change: Equatable {
 
     enum Kind {
         case addition

@@ -20,7 +20,7 @@
 
 import Foundation
 
-public struct Changes: CustomStringConvertible {
+public struct Changes: CustomStringConvertible, Equatable {
 
     public let changes: [Change]
 
