@@ -213,14 +213,14 @@ public class Reporter {
 {% for item in report.folders %}
 {{ item.name }} ({{ item.path }})
 
-{{ item.changes.additions.count }} additions
-{% for addition in item.changes.additions %}
-{{ addition.path }}
-{% endfor %}
-
-{{ item.changes.deletions.count }} deletions
-{% for deletion in item.changes.deletions %}
-{{ deletion.path }}
+{% for change in item.changes.changes %}
+    {% if change.isAddition %}
+        Add {{ change.source.path }}
+    {% elif change.isModification %}
+        Modify {{ change.source.path }}
+    {% else %}
+        Delete {{ change.source.path }}
+    {% endif %}
 {% endfor %}
 
 {% endfor %}
@@ -238,6 +238,7 @@ public class Reporter {
                 --secondary-background-color: #f6f8fa;
                 --addition-background-color: #dafbe1;
                 --deletion-background-color: #ffebe9;
+                --modification-background-color: #c7abff;
                 --border-color: #d1d9e0;
                 --padding: 0.5rem;
             }
@@ -249,9 +250,10 @@ public class Reporter {
                     --secondary-background-color: #151b23;
                     --addition-background-color: #2ea04326;
                     --deletion-background-color: #f851491a;
+                    --modification-background-color: #260960;
                     --border-color: #3d444d;
                 }
-            }            
+            }
 
             body {
                 background-color: var(--primary-background-color);
@@ -304,6 +306,10 @@ public class Reporter {
                 background-color: var(--deletion-background-color);
             }
 
+            .modification {
+                background-color: var(--modification-background-color);
+            }
+
         </style>
     </head>
     <body>
@@ -317,6 +323,8 @@ public class Reporter {
                         {% for change in item.changes.changes %}
                             {% if change.isAddition %}
                                 <li class="addition">{{ change.source.path }}</li>
+                            {% elif change.isModification %}
+                                <li class="modification">{{ change.source.path }}</li>
                             {% else %}
                                 <li class="deletion">{{ change.source.path }}</li>
                             {% endif %}

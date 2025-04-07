@@ -37,7 +37,7 @@ import Foundation
     @Test("Test non-empty snapshot comparison with no changes")
     func testNonEmtpy() {
         let root = URL(filePath: "/home/jbmorley/Files")
-        let item = Item(path: "foo.txt", contentModificationTime: 0, fileSize: 0, checksum: Data())
+        let item = Item(path: "foo.txt", contentModificationTime: 0)
         let snapshot1 = Snapshot(rootURL: root, items: [item])
         let snapshot2 = Snapshot(rootURL: root, items: [item])
         let changes = snapshot1.changes(from: snapshot2)
@@ -45,9 +45,9 @@ import Foundation
     }
 
     @Test("Test snapshot comparison with a single addition")
-    func testAddition() {
+    func testSingleAddition() {
         let root = URL(filePath: "/home/jbmorley/Files")
-        let item = Item(path: "foo.txt", contentModificationTime: 0, fileSize: 0, checksum: Data())
+        let item = Item(path: "foo.txt", contentModificationTime: 0)
         let snapshot1 = Snapshot(rootURL: root)
         let snapshot2 = Snapshot(rootURL: root, items: [item])
         let changes = snapshot2.changes(from: snapshot1)
@@ -57,9 +57,9 @@ import Foundation
     }
 
     @Test("Test snapshot comparison with a single deletion")
-    func testDeletion() {
+    func testSingleDeletion() {
         let root = URL(filePath: "/home/jbmorley/Files")
-        let item = Item(path: "foo.txt", contentModificationTime: 0, fileSize: 0, checksum: Data())
+        let item = Item(path: "foo.txt", contentModificationTime: 0)
         let snapshot1 = Snapshot(rootURL: root, items: [item])
         let snapshot2 = Snapshot(rootURL: root)
         let changes = snapshot2.changes(from: snapshot1)
@@ -71,14 +71,27 @@ import Foundation
     @Test("Test snapshot comparison with a single addition and deletion")
     func testAdditionAndDeletion() {
         let root = URL(filePath: "/home/jbmorley/Files")
-        let item1 = Item(path: "foo.txt", contentModificationTime: 0, fileSize: 0, checksum: Data())
-        let item2 = Item(path: "bar.txt", contentModificationTime: 0, fileSize: 0, checksum: Data())
+        let item1 = Item(path: "foo.txt", contentModificationTime: 0)
+        let item2 = Item(path: "bar.txt", contentModificationTime: 0)
         let snapshot1 = Snapshot(rootURL: root, items: [item1])
         let snapshot2 = Snapshot(rootURL: root, items: [item2])
         let changes = snapshot2.changes(from: snapshot1)
         #expect(changes == Changes(changes: [
             Change(kind: .deletion, source: item1),
             Change(kind: .addition, source: item2)
+        ]))
+    }
+
+    @Test("Test snapshot comparison with a single modification")
+    func testSingleModification() {
+        let root = URL(filePath: "/home/jbmorley/Files")
+        let item1 = Item(path: "foo.txt", contentModificationTime: 0, contents: "Hello")
+        let item2 = Item(path: "foo.txt", contentModificationTime: 0, contents: "Goodbye")
+        let snapshot1 = Snapshot(rootURL: root, items: [item1])
+        let snapshot2 = Snapshot(rootURL: root, items: [item2])
+        let changes = snapshot2.changes(from: snapshot1)
+        #expect(changes == Changes(changes: [
+            Change(kind: .modification, source: item1, destination: item2)
         ]))
     }
 
