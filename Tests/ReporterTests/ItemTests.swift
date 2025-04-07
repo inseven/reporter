@@ -41,11 +41,7 @@ import Crypto
         let item4 = Item(path: "foo.txt", contentModificationTime: 0, fileSize: 512, checksum: Data())
         #expect(item1 != item4)
 
-        var md5 = Crypto.Insecure.MD5()
-        md5.update(data: Data("hello world".utf8))
-        let shasum = Data(md5.finalize())
-
-        let item5 = Item(path: "foo.txt", contentModificationTime: 0, fileSize: 0, checksum: shasum)
+        let item5 = Item(path: "foo.txt", contentModificationTime: 0, fileSize: 0, checksum: "Hello, World!".md5)
         #expect(item1 != item5)
     }
 

@@ -20,32 +20,12 @@
 
 import Foundation
 
-public struct Change: Equatable {
+import Crypto
 
-    enum Kind {
-        case addition
-        case deletion
-        case modification
-    }
+extension String {
 
-    let kind: Kind
-    let source: Item
-    let destination: Item?
-
-    // Stencil doesn't support computed properties so we evaluate these on construction.
-    let isAddition: Bool
-    let isDeletion: Bool
-    let isModification: Bool
-
-    // TODO: Rename `source` and `destination` as they're misleading in the case of a modification? `old` and `new`?
-    init(kind: Kind, source: Item, destination: Item? = nil) {
-        self.kind = kind
-        self.source = source
-        self.destination = destination
-        
-        self.isAddition = kind == .addition
-        self.isDeletion = kind == .deletion
-        self.isModification = kind == .modification
+    var md5: Data {
+        return Data(utf8).md5
     }
 
 }

@@ -35,11 +35,36 @@ public struct Snapshot: Codable {
     }
 
     public func changes(from initialState: Snapshot) -> Changes {
-        let additions = items.subtracting(initialState.items)
-            .map { Change(kind: .addition, source: $0) }
-        let deletions = initialState.items.subtracting(items)
+
+        // Determining the type of change is a little nuanced and there are many different ways to do this.
+        // This approach builds a mutable lookup of the files in the initial state and then walks all of the new files
+        // and determines a possible change that occurred (addition, or modification). We track all the seen files
+        // to allow us to subtract these from our initial set to find deleted files.
+
+        let initialItemsByPath = initialState.items.reduce(into: [String: Item]()) { $0[$1.path] = $1 }
+
+        var additions: [Change] = []
+        var modifications: [Change] = []
+        var seen: Set<Item> = []  // Tracking items that we've seen and attributed a change to.
+
+        // Check for unchanged files and modifications.
+        for item in items {
+            if let initialItem = initialItemsByPath[item.path] {
+                // The path exists in the initial state, so it's either unchanged, or represents a content modification.
+                if initialItem != item {
+                    modifications.append(Change(kind: .modification, source: initialItem, destination: item))
+                }
+                seen.insert(initialItem)
+            } else {
+                additions.append(Change(kind: .addition, source: item))
+            }
+        }
+
+        // Anything that was not attributed to an extant file or a modification.
+        let deletions = initialState.items.subtracting(seen)
             .map { Change(kind: .deletion, source: $0) }
-        return Changes(changes: Array(additions) + Array(deletions))
+
+        return Changes(changes: Array(additions) + Array(deletions) + Array(modifications))
     }
 
 }

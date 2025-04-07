@@ -20,32 +20,16 @@
 
 import Foundation
 
-public struct Change: Equatable {
+import ReporterCore
 
-    enum Kind {
-        case addition
-        case deletion
-        case modification
-    }
+extension Item {
 
-    let kind: Kind
-    let source: Item
-    let destination: Item?
-
-    // Stencil doesn't support computed properties so we evaluate these on construction.
-    let isAddition: Bool
-    let isDeletion: Bool
-    let isModification: Bool
-
-    // TODO: Rename `source` and `destination` as they're misleading in the case of a modification? `old` and `new`?
-    init(kind: Kind, source: Item, destination: Item? = nil) {
-        self.kind = kind
-        self.source = source
-        self.destination = destination
-        
-        self.isAddition = kind == .addition
-        self.isDeletion = kind == .deletion
-        self.isModification = kind == .modification
+    init(path: String, contentModificationTime: TimeInterval, contents: String = "") {
+        let data = Data(contents.utf8)
+        self.init(path: path,
+                  contentModificationTime: contentModificationTime,
+                  fileSize: data.count,
+                  checksum: data.md5)
     }
 
 }
