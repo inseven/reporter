@@ -210,20 +210,20 @@ public class Reporter {
         let environment = Environment()
         let context: [String: Any] = ["report": report]
         let summary = try environment.renderTemplate(string: """
-{% for item in report.folders %}
-{{ item.name }} ({{ item.path }})
+{% for item in report.folders %}{% if item.changes.changes.count > 0 %}
+{{ item.name }} ({{ item.path }}) - {% if item.changes.changes.count > 1 %}{{ item.changes.changes.count }} changes{% else %}1 change{% endif %}
 
-{% for change in item.changes.changes %}
-    {% if change.isAddition %}
-        Add {{ change.source.path }}
-    {% elif change.isModification %}
-        Modify {{ change.source.path }}
-    {% else %}
-        Delete {{ change.source.path }}
-    {% endif %}
-{% endfor %}
+{% for change in item.changes.changes -%}
+{% if change.isAddition -%}
++ {{ change.source.path }}
+{% elif change.isModification -%}
+~ {{ change.source.path }}
+{% else -%}
+- {{ change.source.path }}
+{% endif -%}
+{% endfor -%}
 
-{% endfor %}
+{% endif %}{% endfor %}
 """, context: context)
 
         let htmlSummary = try environment.renderTemplate(string: """
