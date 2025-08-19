@@ -89,6 +89,12 @@ git submodule update --init --recursive
 mise install
 ```
 
+#### Debian
+
+```shell
+sudo apt-get install libssl-dev
+```
+
 ### Build
 
 ```shell
