@@ -313,7 +313,7 @@ public class Reporter {
         </style>
     </head>
     <body>
-        {% for item in report.folders %}
+        {% for item in report.folders %}{% if item.changes.changes.count > 1 %}
             <section class="folder">
                 <header>
                     <div class="name">{{ item.name }}</div>
@@ -332,7 +332,7 @@ public class Reporter {
                     </ul>
                 {% endif %}
             </section>
-        {% endfor %}
+        {% endif %}{% endfor %}
 
         <footer>
             <p>
