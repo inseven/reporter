@@ -11,7 +11,7 @@ if [ -d .build ] ; then
 fi
 
 # Log the Swift version.
-swift version
+swift --version
 
 # Run the tests.
 swift test
