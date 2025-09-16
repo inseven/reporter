@@ -24,9 +24,6 @@ jobs:
         fetch-depth: 0
         lfs: true
 
-    - name: Install Swiftly and Swift
-      uses: swift-actions/setup-swift@v2
-
     - name: Build, test, and release
       run: |
         scripts/build.sh
