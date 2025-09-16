@@ -24,8 +24,10 @@ jobs:
         fetch-depth: 0
         lfs: true
 
-    - name: Install Swiftly
+    - name: Install Swiftly and Swift
       uses: vapor/swiftly-action@v0.2
+      with:
+        toolchain: latest
 
     - name: Build, test, and release
       run: |
