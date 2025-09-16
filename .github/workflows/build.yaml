@@ -25,9 +25,7 @@ jobs:
         lfs: true
 
     - name: Install Swiftly and Swift
-      uses: vapor/swiftly-action@v0.2
-      with:
-        toolchain: latest
+      uses: swift-actions/setup-swift@v2
 
     - name: Build, test, and release
       run: |
