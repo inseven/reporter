@@ -10,6 +10,9 @@ if [ -d .build ] ; then
     rm -rf .build
 fi
 
+# Log the Swift version.
+swift --version
+
 # Run the tests.
 swift test
 
