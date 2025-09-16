@@ -13,7 +13,7 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ubuntu-latest, inseven-macos-15]
+        os: [ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
 
@@ -24,10 +24,8 @@ jobs:
         fetch-depth: 0
         lfs: true
 
-    - name: Install the tool dependencies
-      uses: jdx/mise-action@v2
-      with:
-        experimental: true
+    - name: Install Swiftly
+      uses: vapor/swiftly-action@v0.2
 
     - name: Build, test, and release
       run: |
