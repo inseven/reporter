@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 # Copyright (c) 2024-2025 Jason Morley
 #
@@ -20,27 +20,16 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-set -e
-set -o pipefail
-set -x
-set -u
+SCRIPTS_DIRECTORY="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+ROOT_DIRECTORY="$SCRIPTS_DIRECTORY/.."
 
-ROOT_DIRECTORY="$( cd "$( dirname "$( dirname "${BASH_SOURCE[0]}" )" )" &> /dev/null && pwd )"
-SCRIPTS_DIRECTORY="$ROOT_DIRECTORY/scripts"
+export LOCAL_TOOLS_PATH="$ROOT_DIRECTORY/.local"
 
-source "$SCRIPTS_DIRECTORY/environment.sh"
+export PYTHONUSERBASE="$LOCAL_TOOLS_PATH/python"
+mkdir -p "$PYTHONUSERBASE"
+export PATH="$PYTHONUSERBASE/bin":$PATH
+export PYTHONPATH=$PYTHONUSERBASE
 
-# Remove the build directory if it exists to force a full rebuild.
-if [ -d .build ] ; then
-    rm -rf .build
-fi
-
-# Log the Swift version.
-swift --version
-
-# Run the tests.
-swift test
-
-# Build the project (debug and release).
-swift build
-swift build -c release
+export PATH=$PATH:"$SCRIPTS_DIRECTORY/changes"
+export PATH=$PATH:"$SCRIPTS_DIRECTORY/build-tools"
+export PATH=$PATH:"$ROOT_DIRECTORY/macos/dependencies/diligence/scripts"

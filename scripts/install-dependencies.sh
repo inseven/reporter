@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 # Copyright (c) 2024-2025 Jason Morley
 #
@@ -27,20 +27,15 @@ set -u
 
 ROOT_DIRECTORY="$( cd "$( dirname "$( dirname "${BASH_SOURCE[0]}" )" )" &> /dev/null && pwd )"
 SCRIPTS_DIRECTORY="$ROOT_DIRECTORY/scripts"
+CHANGES_DIRECTORY="$SCRIPTS_DIRECTORY/changes"
+BUILD_TOOLS_DIRECTORY="$SCRIPTS_DIRECTORY/build-tools"
 
 source "$SCRIPTS_DIRECTORY/environment.sh"
 
-# Remove the build directory if it exists to force a full rebuild.
-if [ -d .build ] ; then
-    rm -rf .build
+if [ -d "$LOCAL_TOOLS_PATH" ] ; then
+    rm -r "$LOCAL_TOOLS_PATH"
 fi
 
-# Log the Swift version.
-swift --version
-
-# Run the tests.
-swift test
-
-# Build the project (debug and release).
-swift build
-swift build -c release
+python -m pip install --target "$PYTHONUSERBASE" --upgrade pipenv wheel
+PIPENV_PIPFILE="$CHANGES_DIRECTORY/Pipfile" pipenv install
+PIPENV_PIPFILE="$BUILD_TOOLS_DIRECTORY/Pipfile" pipenv install
