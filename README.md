@@ -1,5 +1,7 @@
 # Reporter
 
+[![build](https://github.com/inseven/reporter/actions/workflows/build.yaml/badge.svg)](https://github.com/inseven/reporter/actions/workflows/build.yaml)
+
 File change report generator for macOS and Linux a with built-in mailer
 
 ## Overview
