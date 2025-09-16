@@ -80,7 +80,7 @@ N.B. Depending on your server's mail configuration, you might want to use someth
 
 ### Dependencies
 
-Reporter is written in Swift. [mise-en-place](https://mise.jdx.dev) is used to manage the Swift toolchain on Linux and macOS.
+Reporter is written in Swift. [Swiftly](https://www.swift.org/install/) is the recommended mechanism to install the Swift toolchain.
 
 ```shell
 git clone git@github.com:inseven/reporter.git
