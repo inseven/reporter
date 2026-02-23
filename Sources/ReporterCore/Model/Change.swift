@@ -22,7 +22,7 @@ import Foundation
 
 public struct Change: Equatable {
 
-    enum Kind {
+    public enum Kind {
         case addition
         case deletion
         case modification
@@ -38,7 +38,7 @@ public struct Change: Equatable {
     let isModification: Bool
 
     // TODO: Rename `source` and `destination` as they're misleading in the case of a modification? `old` and `new`?
-    init(kind: Kind, source: Item, destination: Item? = nil) {
+    private init(kind: Kind, source: Item, destination: Item? = nil) {
         self.kind = kind
         self.source = source
         self.destination = destination
@@ -46,6 +46,18 @@ public struct Change: Equatable {
         self.isAddition = kind == .addition
         self.isDeletion = kind == .deletion
         self.isModification = kind == .modification
+    }
+
+    public init(additionWithSource source: Item) {
+        self.init(kind: .addition, source: source)
+    }
+
+    public init(deletionWithSource source: Item) {
+        self.init(kind: .deletion, source: source)
+    }
+
+    public init(modificationWithSource source: Item, destination: Item) {
+        self.init(kind: .modification, source: source, destination: destination)
     }
 
 }

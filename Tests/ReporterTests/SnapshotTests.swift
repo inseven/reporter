@@ -52,7 +52,7 @@ import Foundation
         let snapshot2 = Snapshot(rootURL: root, items: [item])
         let changes = snapshot2.changes(from: snapshot1)
         #expect(changes == Changes(changes: [
-            Change(kind: .addition, source: item)
+            Change(additionWithSource: item)
         ]))
     }
 
@@ -64,7 +64,7 @@ import Foundation
         let snapshot2 = Snapshot(rootURL: root)
         let changes = snapshot2.changes(from: snapshot1)
         #expect(changes == Changes(changes: [
-            Change(kind: .deletion, source: item)
+            Change(deletionWithSource: item)
         ]))
     }
 
@@ -77,8 +77,8 @@ import Foundation
         let snapshot2 = Snapshot(rootURL: root, items: [item2])
         let changes = snapshot2.changes(from: snapshot1)
         #expect(changes == Changes(changes: [
-            Change(kind: .deletion, source: item1),
-            Change(kind: .addition, source: item2)
+            Change(deletionWithSource: item1),
+            Change(additionWithSource: item2)
         ]))
     }
 
@@ -91,7 +91,7 @@ import Foundation
         let snapshot2 = Snapshot(rootURL: root, items: [item2])
         let changes = snapshot2.changes(from: snapshot1)
         #expect(changes == Changes(changes: [
-            Change(kind: .modification, source: item1, destination: item2)
+            Change(modificationWithSource: item1, destination: item2)
         ]))
     }
 
