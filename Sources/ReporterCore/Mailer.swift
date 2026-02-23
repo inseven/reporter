@@ -24,6 +24,8 @@ import Crypto
 import Stencil
 import SwiftSMTP
 
+import ReporterMetadata
+
 public class Mailer {
 
     let configuration: Configuration
@@ -37,8 +39,17 @@ public class Mailer {
     }
 
     public func send(report: Report) async throws {
+
+        let app: [String: String] = [
+            "version": App.version,
+            "build_number": App.buildNumber,
+        ]
+        let context: [String: Any] = [
+            "app": app,
+            "report": report
+        ]
+
         let environment = Environment()
-        let context: [String: Any] = ["report": report]
         let textSummary = try environment.renderTemplate(string: textTemplate, context: context)
         let htmlSummary = try environment.renderTemplate(string: htmlTemplate, context: context)
 
