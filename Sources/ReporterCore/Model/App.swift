@@ -27,4 +27,12 @@ public struct App {
     public static let version = String(cString: kMetadataVersion)
     public static let buildNumber = String(cString: kMetadataBuildNumber)
 
+    public static let fullyQualifiedVersion: String = {
+        var components: [String] = [App.version, App.buildNumber]
+#if DEBUG
+        components.append("debug")
+#endif
+        return components.joined(separator: " ")
+    }()
+
 }

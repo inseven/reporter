@@ -28,17 +28,9 @@ import ReporterMetadata
 @main
 struct Command: AsyncParsableCommand {
 
-    static func version() -> String {
-        var components: [String] = [App.version, App.buildNumber]
-#if DEBUG
-        components.append("debug")
-#endif
-        return components.joined(separator: " ")
-    }
-
     public static let configuration = CommandConfiguration(
         commandName: "reporter",
-        version: version(),
+        version: App.fullyQualifiedVersion,
         subcommands: [
             CommandScan.self,
             CommandSendTestEmail.self,
