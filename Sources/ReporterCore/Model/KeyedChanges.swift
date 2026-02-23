@@ -34,7 +34,9 @@ public struct KeyedChanges {
         self.path = url.path
     }
 
-    public init(url: URL, @ChangesBuilder changes: () throws -> [Change]) throws {
+    public init(exampleWithDirectoryName directoryName: String, @ChangesBuilder changes: () throws -> [Change]) throws {
+        let url = URL(fileURLWithPath: "~/".expandingTildeInPath)
+            .appendingPathComponent(directoryName, isDirectory: true)
         self.init(url: url, changes: Changes(changes: try changes()))
     }
 
