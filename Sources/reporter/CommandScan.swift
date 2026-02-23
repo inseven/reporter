@@ -32,7 +32,8 @@ struct CommandScan: AsyncParsableCommand {
     @Argument(transform: URL.init(fileURLWithPath:))
     var snapshot: URL?
 
-    public static let configuration = CommandConfiguration(commandName: "scan")
+    public static let configuration = CommandConfiguration(commandName: "scan",
+                                                           abstract: "Scan for changes and send an email report.")
 
     mutating func run() async throws {
         let reporter = try Reporter(configurationURL: config ?? .configURL, snapshotURL: snapshot ?? .snapshotURL)
