@@ -20,24 +20,23 @@
 
 import Foundation
 
-public struct KeyedChanges {
+@resultBuilder
+public struct ChangesBuilder {
 
-    public let url: URL
-    public let changes: Changes
-    public let name: String
-    public let path: String
-
-    public init(url: URL, changes: Changes) {
-        self.url = url
-        self.changes = changes
-        self.name = url.lastPathComponent
-        self.path = url.path
+    public static func buildBlock(_ parts: Change...) -> [Change] {
+        return parts
     }
 
-    public init(exampleWithDirectoryName directoryName: String, @ChangesBuilder changes: () throws -> [Change]) throws {
-        let url = URL(fileURLWithPath: "~/".expandingTildeInPath)
-            .appendingPathComponent(directoryName, isDirectory: true)
-        self.init(url: url, changes: Changes(changes: try changes()))
+    public static func buildEither(first component: Change) -> [Change] {
+        return [component]
+    }
+
+    public static func buildEither(second component: Change) -> [Change] {
+        return [component]
+    }
+
+    public static func buildArray(_ components: [Change]) -> [Change] {
+        return components
     }
 
 }

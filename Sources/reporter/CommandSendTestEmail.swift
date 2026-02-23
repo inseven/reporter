@@ -25,25 +25,21 @@ import ReporterCore
 
 import Crypto
 
-func exampleChecksum(data: Data) throws -> Data {
-    var md5 = Crypto.Insecure.MD5()
-    if data.count > 0 {
-        md5.update(data: data)
-    }
-    return Data(md5.finalize())
-}
-
 extension Item {
 
     init(exampleWithSubPath subPath: String, contents: String) throws {
-
         guard let data = contents.data(using: .utf8) else {
             throw ReporterError.failed
         }
+        var md5 = Crypto.Insecure.MD5()
+        if data.count > 0 {
+            md5.update(data: data)
+        }
+        let checksum = Data(md5.finalize())
         self.init(path: subPath,
                   contentModificationTime: Date.now.timeIntervalSince1970,
                   fileSize: data.count,
-                  checksum: try exampleChecksum(data: data))
+                  checksum: checksum)
     }
 
 }
@@ -60,16 +56,18 @@ struct CommandSendTestEmail: AsyncParsableCommand {
     mutating func run() async throws {
         let reporter = try Reporter(configurationURL: config ?? .configURL, snapshotURL: .snapshotURL)
         let report = Report(folders: [
-            KeyedChanges(url: URL(fileURLWithPath: "/Users/home/jbmorley/Documents"), changes: Changes(changes: [
+            try KeyedChanges(exampleWithDirectoryName: "Documents") {
+
                 Change(additionWithSource: try Item(exampleWithSubPath: "Example.txt",
-                                                    contents: "Hello, World.")),
+                                                    contents: "Hello, World."))
+
                 Change(deletionWithSource: try Item(exampleWithSubPath: "Screenshot.png",
-                                                    contents: "This is an image, honest.")),
-                Change(modificationWithSource: try Item(exampleWithSubPath: "Report.csv",
-                                                        contents: "1,2,3"),
-                       destination: try Item(exampleWithSubPath: "Report.csv", contents: "1,2,3,4,5,6")),
-            ]))
-        ])
+                                                    contents: "This is an image, honest."))
+
+                Change(modificationWithSource: try Item(exampleWithSubPath: "Report.csv", contents: "1,2,3"),
+                       destination: try Item(exampleWithSubPath: "Report.csv", contents: "1,2,3,4,5,6"))
+
+            }])
         try await reporter.send(report: report)
     }
 
