@@ -20,28 +20,11 @@
 
 import Foundation
 
-import ArgumentParser
-
-import ReporterCore
 import ReporterMetadata
 
-@main
-struct Command: AsyncParsableCommand {
+public struct App {
 
-    static func version() -> String {
-        var components: [String] = [App.version, App.buildNumber]
-#if DEBUG
-        components.append("debug")
-#endif
-        return components.joined(separator: " ")
-    }
-
-    public static let configuration = CommandConfiguration(
-        commandName: "reporter",
-        version: version(),
-        subcommands: [
-            CommandScan.self,
-            CommandSendTestEmail.self,
-        ])
+    public static let version = String(cString: kMetadataVersion)
+    public static let buildNumber = String(cString: kMetadataBuildNumber)
 
 }

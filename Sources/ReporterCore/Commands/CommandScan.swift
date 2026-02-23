@@ -22,20 +22,22 @@ import Foundation
 
 import ArgumentParser
 
-import ReporterCore
-
-struct CommandScan: AsyncParsableCommand {
+public struct CommandScan: AsyncParsableCommand {
 
     @Argument(transform: URL.init(fileURLWithPath:))
-    var config: URL?
+    public var config: URL?
 
     @Argument(transform: URL.init(fileURLWithPath:))
-    var snapshot: URL?
+    public var snapshot: URL?
 
     public static let configuration = CommandConfiguration(commandName: "scan",
                                                            abstract: "Scan for changes and send an email report.")
 
-    mutating func run() async throws {
+    public init() {
+
+    }
+
+    public mutating func run() async throws {
         let reporter = try Reporter(configurationURL: config ?? .configURL, snapshotURL: snapshot ?? .snapshotURL)
         try await reporter.run()
     }
