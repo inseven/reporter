@@ -52,17 +52,17 @@ public struct Snapshot: Codable {
             if let initialItem = initialItemsByPath[item.path] {
                 // The path exists in the initial state, so it's either unchanged, or represents a content modification.
                 if initialItem != item {
-                    modifications.append(Change(kind: .modification, source: initialItem, destination: item))
+                    modifications.append(Change(modificationWithSource: initialItem, destination: item))
                 }
                 seen.insert(initialItem)
             } else {
-                additions.append(Change(kind: .addition, source: item))
+                additions.append(Change(additionWithSource: item))
             }
         }
 
         // Anything that was not attributed to an extant file or a modification.
         let deletions = initialState.items.subtracting(seen)
-            .map { Change(kind: .deletion, source: $0) }
+            .map { Change(deletionWithSource: $0) }
 
         return Changes(changes: Array(additions) + Array(deletions) + Array(modifications))
     }

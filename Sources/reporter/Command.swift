@@ -30,7 +30,8 @@ struct Command: AsyncParsableCommand {
     public static let configuration = CommandConfiguration(
         commandName: "reporter",
         subcommands: [
-            CommandScan.self
+            CommandScan.self,
+            CommandSendTestEmail.self,
         ])
 
     public init() {

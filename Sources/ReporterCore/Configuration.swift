@@ -20,9 +20,9 @@
 
 import Foundation
 
-struct Configuration: Codable {
+public struct Configuration: Codable {
 
-    struct Server: Codable {
+    public struct Server: Codable {
 
         let host: String
         let port: Int32
@@ -34,14 +34,14 @@ struct Configuration: Codable {
 
     }
 
-    struct User: Codable {
+    public struct User: Codable {
 
         let address: String
         let name: String?
 
     }
 
-    struct Email: Codable {
+    public struct Email: Codable {
 
         let from: User
         let to: [User]
@@ -50,15 +50,15 @@ struct Configuration: Codable {
 
     }
 
-    struct Policy: Codable {
+    public struct Policy: Codable {
 
     }
 
-    let mailServer: Server
-    let email: Email
-    let folders: [String: Policy]
+    public let mailServer: Server
+    public let email: Email
+    public let folders: [String: Policy]
 
-    init(contentsOf url: URL) throws {
+    public init(contentsOf url: URL) throws {
         let data = try Data(contentsOf: url)
         let decoder = JSONDecoder()
         self = try decoder.decode(Self.self, from: data)
