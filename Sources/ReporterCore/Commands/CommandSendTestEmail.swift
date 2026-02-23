@@ -21,39 +21,20 @@
 import Foundation
 import ArgumentParser
 
-import ReporterCore
-
-import Crypto
-
-extension Item {
-
-    init(exampleWithSubPath subPath: String, contents: String) throws {
-        guard let data = contents.data(using: .utf8) else {
-            throw ReporterError.failed
-        }
-        var md5 = Crypto.Insecure.MD5()
-        if data.count > 0 {
-            md5.update(data: data)
-        }
-        let checksum = Data(md5.finalize())
-        self.init(path: subPath,
-                  contentModificationTime: Date.now.timeIntervalSince1970,
-                  fileSize: data.count,
-                  checksum: checksum)
-    }
-
-}
-
-struct CommandSendTestEmail: AsyncParsableCommand {
+public struct CommandSendTestEmail: AsyncParsableCommand {
 
     @Argument(transform: URL.init(fileURLWithPath:))
-    var config: URL?
+    public var config: URL?
 
     public static let configuration = CommandConfiguration(
         commandName: "send-test-email",
         abstract: "Send a test email.")
 
-    mutating func run() async throws {
+    public init() {
+
+    }
+
+    public mutating func run() async throws {
         let reporter = try Reporter(configurationURL: config ?? .configURL, snapshotURL: .snapshotURL)
         let report = Report(folders: [
             try KeyedChanges(exampleWithDirectoryName: "Documents") {

@@ -20,24 +20,19 @@
 
 import Foundation
 
-import ArgumentParser
+import ReporterMetadata
 
-import ReporterCore
+public struct App {
 
-struct CommandScan: AsyncParsableCommand {
+    public static let version = String(cString: kMetadataVersion)
+    public static let buildNumber = String(cString: kMetadataBuildNumber)
 
-    @Argument(transform: URL.init(fileURLWithPath:))
-    var config: URL?
-
-    @Argument(transform: URL.init(fileURLWithPath:))
-    var snapshot: URL?
-
-    public static let configuration = CommandConfiguration(commandName: "scan",
-                                                           abstract: "Scan for changes and send an email report.")
-
-    mutating func run() async throws {
-        let reporter = try Reporter(configurationURL: config ?? .configURL, snapshotURL: snapshot ?? .snapshotURL)
-        try await reporter.run()
-    }
+    public static let fullyQualifiedVersion: String = {
+        var components: [String] = [App.version, App.buildNumber]
+#if DEBUG
+        components.append("debug")
+#endif
+        return components.joined(separator: " ")
+    }()
 
 }

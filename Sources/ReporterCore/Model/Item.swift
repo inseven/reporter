@@ -20,6 +20,8 @@
 
 import Foundation
 
+import Crypto
+
 public struct Item: Codable, Hashable, Sendable {
 
     enum CodingKeys: String, CodingKey {
@@ -59,6 +61,22 @@ public struct Item: Codable, Hashable, Sendable {
         self.contentModificationTime = TimeInterval(data)
         self.fileSize = try container.decode(Int.self, forKey: CodingKeys.fileSize)
         self.checksum = try container.decode(Data.self, forKey: CodingKeys.checksum)
+    }
+
+
+    init(exampleWithSubPath subPath: String, contents: String) throws {
+        guard let data = contents.data(using: .utf8) else {
+            throw ReporterError.failed
+        }
+        var md5 = Crypto.Insecure.MD5()
+        if data.count > 0 {
+            md5.update(data: data)
+        }
+        let checksum = Data(md5.finalize())
+        self.init(path: subPath,
+                  contentModificationTime: Date.now.timeIntervalSince1970,
+                  fileSize: data.count,
+                  checksum: checksum)
     }
 
     public func encode(to encoder: any Encoder) throws {
