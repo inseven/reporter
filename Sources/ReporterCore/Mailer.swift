@@ -27,16 +27,20 @@ import SwiftSMTP
 public class Mailer {
 
     let configuration: Configuration
+    let textTemplate: String
+    let htmlTemplate: String
 
-    public init(configuration: Configuration) {
+    public init(configuration: Configuration, textTemplate: String, htmlTemplate: String) {
         self.configuration = configuration
+        self.textTemplate = textTemplate
+        self.htmlTemplate = htmlTemplate
     }
 
     public func send(report: Report) async throws {
         let environment = Environment()
         let context: [String: Any] = ["report": report]
-        let textSummary = try environment.renderTemplate(string: Template.text, context: context)
-        let htmlSummary = try environment.renderTemplate(string: Template.html, context: context)
+        let textSummary = try environment.renderTemplate(string: textTemplate, context: context)
+        let htmlSummary = try environment.renderTemplate(string: htmlTemplate, context: context)
 
         let smtp = SMTP(
             hostname: configuration.mailServer.host,
