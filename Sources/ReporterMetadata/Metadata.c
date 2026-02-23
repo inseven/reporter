@@ -20,5 +20,14 @@
 
 #include "Metadata.h"
 
+#if defined(VERSION_NUMBER)
+const char * const kMetadataVersion = VERSION_NUMBER;
+#else
 const char * const kMetadataVersion = "0.0.0";
+#endif
+
+#if defined(BUILD_NUMBER)
+const char * const kMetadataBuildNumber = BUILD_NUMBER;
+#else
 const char * const kMetadataBuildNumber = "0";
+#endif
