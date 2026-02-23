@@ -25,13 +25,20 @@ import ReporterMetadata
 public struct App {
 
     public static let version = String(cString: kMetadataVersion)
+
     public static let buildNumber = String(cString: kMetadataBuildNumber)
+
+#if DEBUG
+    public static let isDebug = true
+#else
+    public static let isDebug = false
+#endif
 
     public static let fullyQualifiedVersion: String = {
         var components: [String] = [App.version, App.buildNumber]
-#if DEBUG
-        components.append("debug")
-#endif
+        if isDebug {
+            components.append("debug")
+        }
         return components.joined(separator: " ")
     }()
 

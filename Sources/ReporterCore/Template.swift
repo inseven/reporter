@@ -41,6 +41,10 @@ public class Template {
 {% endfor -%}
 
 {% endif %}{% endfor %}
+
+Generated with Reporter ({{ app.version }} {{ app.build_number }}) by Jason Morley.
+https://github.com/inseven/reporter
+https://jbmorley.co.uk
 """
 
     static let html = """
@@ -153,7 +157,7 @@ public class Template {
 
         <footer>
             <p>
-                Generated with <a href="https://github.com/inseven/reporter">Reporter</a> by <a href="https://jbmorley.co.uk">Jason Morley</a>.
+                Generated with <a href="https://github.com/inseven/reporter">Reporter</a> ({{ app.version }} {{ app.build_number }}) by <a href="https://jbmorley.co.uk">Jason Morley</a>.
             </p>
         </footer>
 
