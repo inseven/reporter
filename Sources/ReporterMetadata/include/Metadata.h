@@ -18,36 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import Foundation
+#pragma once
 
-import ArgumentParser
-
-import ReporterCore
-import ReporterMetadata
-
-@main
-struct Command: AsyncParsableCommand {
-
-    static func version() -> String {
-        let version = String(cString: kMetadataVersion)
-        let buildNumber = String(cString: kMetadataBuildNumber)
-        var components: [String] = [version, buildNumber]
-#if DEBUG
-        components.append("debug")
-#endif
-        return components.joined(separator: " ")
-    }
-
-    public static let configuration = CommandConfiguration(
-        commandName: "reporter",
-        version: version(),
-        subcommands: [
-            CommandScan.self,
-            CommandSendTestEmail.self,
-        ])
-
-    public init() {
-
-    }
-
-}
+extern const char * const kMetadataVersion;
+extern const char * const kMetadataBuildNumber;

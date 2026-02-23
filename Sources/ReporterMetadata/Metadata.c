@@ -18,36 +18,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import Foundation
+#include "Metadata.h"
 
-import ArgumentParser
-
-import ReporterCore
-import ReporterMetadata
-
-@main
-struct Command: AsyncParsableCommand {
-
-    static func version() -> String {
-        let version = String(cString: kMetadataVersion)
-        let buildNumber = String(cString: kMetadataBuildNumber)
-        var components: [String] = [version, buildNumber]
-#if DEBUG
-        components.append("debug")
+#if defined(VERSION_NUMBER)
+const char * const kMetadataVersion = VERSION_NUMBER;
+#else
+const char * const kMetadataVersion = "0.0.0";
 #endif
-        return components.joined(separator: " ")
-    }
 
-    public static let configuration = CommandConfiguration(
-        commandName: "reporter",
-        version: version(),
-        subcommands: [
-            CommandScan.self,
-            CommandSendTestEmail.self,
-        ])
-
-    public init() {
-
-    }
-
-}
+#if defined(BUILD_NUMBER)
+const char * const kMetadataBuildNumber = BUILD_NUMBER;
+#else
+const char * const kMetadataBuildNumber = "0";
+#endif

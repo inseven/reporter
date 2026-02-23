@@ -42,5 +42,9 @@ swift --version
 swift test
 
 # Build the project (debug and release).
-swift build
-swift build -c release
+
+VERSION_NUMBER=`changes version`
+BUILD_NUMBER=`build-tools generate-build-number`
+
+swift build -Xcc "-DVERSION_NUMBER=\"$VERSION_NUMBER\"" -Xcc "-DBUILD_NUMBER=\"$BUILD_NUMBER\""
+swift build -c release -Xcc "-DVERSION_NUMBER=\"$VERSION_NUMBER\"" -Xcc "-DBUILD_NUMBER=\"$BUILD_NUMBER\""

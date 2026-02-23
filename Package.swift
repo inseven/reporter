@@ -42,14 +42,19 @@ let package = Package(
             ]
         ),
         .target(
+            name: "ReporterMetadata"
+        ),
+        .target(
             name: "ReporterCore",
             dependencies: [
+                "ReporterMetadata",
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 .product(name: "BinaryCodable", package: "BinaryCodable"),
                 .product(name: "Stencil", package: "Stencil"),
                 .product(name: "SwiftSMTP", package: "Swift-SMTP"),
                 .product(name: "Crypto", package: "swift-crypto"),
-            ]),
+            ]
+        ),
         .testTarget(
             name: "ReporterTests",
             dependencies: [
