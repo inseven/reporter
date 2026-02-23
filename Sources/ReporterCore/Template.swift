@@ -32,11 +32,11 @@ public class Template {
 
 {% for change in item.changes.changes -%}
 {% if change.isAddition -%}
-+ {{ change.source.path }}
+[A] {{ change.source.path }}
 {% elif change.isModification -%}
-~ {{ change.source.path }}
+[M] {{ change.source.path }}
 {% else -%}
-- {{ change.source.path }}
+[D] {{ change.source.path }}
 {% endif -%}
 {% endfor -%}
 
