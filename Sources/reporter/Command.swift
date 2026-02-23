@@ -25,10 +25,6 @@ import ArgumentParser
 import ReporterCore
 import ReporterMetadata
 
-let foo: String = {
-    return String(cString: kMetadataVersion)
-}()
-
 @main
 struct Command: AsyncParsableCommand {
 
