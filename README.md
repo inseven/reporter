@@ -72,7 +72,7 @@ Reporter does not currently provide built-in support for scheduling checks, inst
 For example, my current configuration uses `cron` to schedule builds at 3am every morning:
 
 ```plaintext
-0 3 * * * /home/jbmorley/Projects/reporter/.build/release/reporter
+0 3 * * * /home/jbmorley/Projects/reporter/.build/release/reporter scan
 ```
 
 N.B. Depending on your server's mail configuration, you might want to use something like [cronic](https://habilis.net/cronic/) to quiet the output and stop `cron` sending mails unless there's an error.
@@ -110,11 +110,11 @@ Under the hood, this runs `swift test`, `swift build`, and `swift build -c relea
 Use the `swift` compiler:
 
 ```shell
-swift run
+swift run reporter scan
 ```
 
 Or run the result of `build.sh` (above) directly:
 
 ```shell
-.build/release/reporter
+.build/release/reporter scan
 ```
