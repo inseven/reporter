@@ -188,34 +188,48 @@ public class Reporter {
         return report
     }
 
-    public static func run(configurationURL: URL, snapshotURL: URL) async throws {
+    private let configuration: Configuration
+    private let snapshotURL: URL
+    private let console: Console
 
-        let console = Console()
+    private let textTemplate: String
+    private let htmlTemplate: String
 
-        // Load the configuration.
-        console.log("Loading configuration...")
-        let configuration = try Configuration(contentsOf: configurationURL)
+    public init(configurationURL: URL, snapshotURL: URL) throws {
+        self.configuration = try Configuration(contentsOf: configurationURL)
+        self.snapshotURL = snapshotURL
+        self.console = Console()
 
-        // Generate the report.
-        let report = try await report(configuration: configuration,
-                                      snapshotURL: snapshotURL,
-                                      console: console)
+        let fileManager = FileManager.default
+        textTemplate = if fileManager.fileExists(at: URL.textEmailTemplateURL) {
+            try String(contentsOf: URL.textEmailTemplateURL, encoding: .utf8)
+        } else {
+            Template.text
+        }
+        htmlTemplate = if fileManager.fileExists(at: URL.htmlEmailTemplateURL) {
+            try String(contentsOf: URL.htmlEmailTemplateURL, encoding: .utf8)
+        } else {
+            Template.html
+        }
+    }
 
-        // Return early if there are no outstanding changes.
+    public func run() async throws {
+        let report = try await Self.report(configuration: configuration,
+                                           snapshotURL: snapshotURL,
+                                           console: console)
         if report.isEmpty {
             console.log("No changes detected; skipping report.")
             return
         }
-        
-        // Send a summary email.
-        console.log("Sending email...")
-        let mailer = Mailer(configuration: configuration)
-        try await mailer.send(report: report)
+        try await send(report: report)
 
         console.log("Done!")
+    }
 
+    public func send(report: Report) async throws {
+        console.log("Sending email...")
+        let mailer = Mailer(configuration: configuration, textTemplate: textTemplate, htmlTemplate: htmlTemplate)
+        try await mailer.send(report: report)
     }
 
 }
-
-

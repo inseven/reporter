@@ -58,7 +58,7 @@ struct CommandSendTestEmail: AsyncParsableCommand {
         abstract: "Send a test email.")
 
     mutating func run() async throws {
-        let configuration = try Configuration(contentsOf: config ?? .configURL)
+        let reporter = try Reporter(configurationURL: config ?? .configURL, snapshotURL: .snapshotURL)
         let report = Report(folders: [
             KeyedChanges(url: URL(fileURLWithPath: "/Users/home/jbmorley/Documents"), changes: Changes(changes: [
                 Change(additionWithSource: try Item(exampleWithSubPath: "Example.txt",
@@ -70,8 +70,7 @@ struct CommandSendTestEmail: AsyncParsableCommand {
                        destination: try Item(exampleWithSubPath: "Report.csv", contents: "1,2,3,4,5,6")),
             ]))
         ])
-        let mailer = Mailer(configuration: configuration)
-        try await mailer.send(report: report)
+        try await reporter.send(report: report)
     }
 
 }

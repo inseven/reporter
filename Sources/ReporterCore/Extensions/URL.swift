@@ -24,6 +24,8 @@ extension URL {
 
     public static let configURL = URL(fileURLWithPath: "~/.config/reporter/config.json".expandingTildeInPath)
     public static let snapshotURL = URL(fileURLWithPath: "~/.config/reporter/snapshot".expandingTildeInPath)
+    public static let textEmailTemplateURL = URL(fileURLWithPath: "~/.config/reporter/template.txt".expandingTildeInPath)
+    public static let htmlEmailTemplateURL = URL(fileURLWithPath: "~/.config/reporter/template.html".expandingTildeInPath)
 
     func path(relativeTo baseURL: URL, percentEncoded: Bool = true) throws -> String {
         guard baseURL.hasDirectoryPath else {
