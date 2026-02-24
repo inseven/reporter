@@ -81,7 +81,7 @@ cd "$BUILD_DIRECTORY"
 GIT_SHA=`git rev-parse HEAD`
 
 REPORTER_MACOS_NAME="reporter-$VERSION_NUMBER-$BUILD_NUMBER.zip"
-cp "$ARTIFACTS_DIRECTORY/reporter-macos/reporter.zip" "$REPORTER_MACOS_PATH"
+cp "$ARTIFACTS_DIRECTORY/reporter-macos/reporter.zip" "$REPORTER_MACOS_NAME"
 
 build-tools add-artifact manifest.json \
     --project reporter \
