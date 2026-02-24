@@ -81,7 +81,7 @@ case $DISTRO in
         ARCHITECTURE=`dpkg --print-architecture`
         source /etc/lsb-release
         OS_VERSION="$DISTRIB_RELEASE"
-        PACKAGE_FILENAME="reporter_${VERSION_NUMBER}_${DISTRO}_${OS_VERSION}_${ARCHITECTURE}.deb"
+        PACKAGE_FILENAME="reporter.deb"
         fpm \
             -s dir \
             -t deb \

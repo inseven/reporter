@@ -74,85 +74,16 @@ mkdir -p "$BUILD_DIRECTORY"
 # List the artifacts.
 find "$ARTIFACTS_DIRECTORY"
 
-# # Copy the Qt builds.
-#
-# # macOS.
-# QT_MACOS_PATH="$BUILD_DIRECTORY/OpoLua-Qt-macOS-$VERSION_NUMBER-$BUILD_NUMBER.zip"
-# cp "$ARTIFACTS_DIRECTORY/opolua-qt-macos/build.zip" "$QT_MACOS_PATH"
-#
-# # Windows.
-# QT_WINDOWS_PATH="$BUILD_DIRECTORY/OpoLua-Qt-Windows-$VERSION_NUMBER-$BUILD_NUMBER.zip"
-# cp "$ARTIFACTS_DIRECTORY/opolua-qt-windows/build.zip" "$QT_WINDOWS_PATH"
-#
-# # Linux.
-#
-# QT_UBUNTU_2404_ARM64_NAME="opolua-ubuntu-24.04-arm64-$VERSION_NUMBER-$BUILD_NUMBER.deb"
-# QT_UBUNTU_2404_ARM64_PATH="$BUILD_DIRECTORY/$QT_UBUNTU_2404_ARM64_NAME"
-# cp "$ARTIFACTS_DIRECTORY/opolua-qt-ubuntu-24.04-arm64/$QT_UBUNTU_2404_ARM64_NAME" "$QT_UBUNTU_2404_ARM64_PATH"
-#
-# QT_UBUNTU_2404_AMD64_NAME="opolua-ubuntu-24.04-amd64-$VERSION_NUMBER-$BUILD_NUMBER.deb"
-# QT_UBUNTU_2404_AMD64_PATH="$BUILD_DIRECTORY/$QT_UBUNTU_2404_AMD64_NAME"
-# cp "$ARTIFACTS_DIRECTORY/opolua-qt-ubuntu-24.04-amd64/$QT_UBUNTU_2404_AMD64_NAME" "$QT_UBUNTU_2404_AMD64_PATH"
-#
-# QT_UBUNTU_2504_ARM64_NAME="opolua-ubuntu-25.04-arm64-$VERSION_NUMBER-$BUILD_NUMBER.deb"
-# QT_UBUNTU_2504_ARM64_PATH="$BUILD_DIRECTORY/$QT_UBUNTU_2504_ARM64_NAME"
-# cp "$ARTIFACTS_DIRECTORY/opolua-qt-ubuntu-25.04-arm64/$QT_UBUNTU_2504_ARM64_NAME" "$QT_UBUNTU_2504_ARM64_PATH"
-#
-# QT_UBUNTU_2504_AMD64_NAME="opolua-ubuntu-25.04-amd64-$VERSION_NUMBER-$BUILD_NUMBER.deb"
-# QT_UBUNTU_2504_AMD64_PATH="$BUILD_DIRECTORY/$QT_UBUNTU_2504_AMD64_NAME"
-# cp "$ARTIFACTS_DIRECTORY/opolua-qt-ubuntu-25.04-amd64/$QT_UBUNTU_2504_AMD64_NAME" "$QT_UBUNTU_2504_AMD64_PATH"
-#
-# QT_UBUNTU_2510_ARM64_NAME="opolua-ubuntu-25.10-arm64-$VERSION_NUMBER-$BUILD_NUMBER.deb"
-# QT_UBUNTU_2510_ARM64_PATH="$BUILD_DIRECTORY/$QT_UBUNTU_2510_ARM64_NAME"
-# cp "$ARTIFACTS_DIRECTORY/opolua-qt-ubuntu-25.10-arm64/$QT_UBUNTU_2510_ARM64_NAME" "$QT_UBUNTU_2510_ARM64_PATH"
-#
-# QT_UBUNTU_2510_AMD64_NAME="opolua-ubuntu-25.10-amd64-$VERSION_NUMBER-$BUILD_NUMBER.deb"
-# QT_UBUNTU_2510_AMD64_PATH="$BUILD_DIRECTORY/$QT_UBUNTU_2510_AMD64_NAME"
-# cp "$ARTIFACTS_DIRECTORY/opolua-qt-ubuntu-25.10-amd64/$QT_UBUNTU_2510_AMD64_NAME" "$QT_UBUNTU_2510_AMD64_PATH"
-#
-# QT_ARCH_ROLLING_X86_64_NAME="opolua-bin-arch-rolling-x86_64-$VERSION_NUMBER-$BUILD_NUMBER.pkg.tar.zst"
-# QT_ARCH_ROLLING_X86_64_PATH="$BUILD_DIRECTORY/$QT_ARCH_ROLLING_X86_64_NAME"
-# cp "$ARTIFACTS_DIRECTORY/opolua-qt-arch-latest-x86_64/$QT_ARCH_ROLLING_X86_64_NAME" "$QT_ARCH_ROLLING_X86_64_PATH"
-#
-# # Unpack the iOS and Mac Catalyst builds.
-#
-# unzip "$ARTIFACTS_DIRECTORY/opolua-ios/build.zip" -d "$BUILD_DIRECTORY"
-# IPA_PATH="$BUILD_DIRECTORY/OpoLua.ipa"
-# PKG_PATH="$BUILD_DIRECTORY/OpoLua.pkg"
-#
+# Copy the artifacts to the builds directory.
+
+REPORTER_MACOS_PATH="$BUILD_DIRECTORY/reporter-$VERSION_NUMBER-$BUILD_NUMBER.zip"
+cp "$ARTIFACTS_DIRECTORY/reporter-macos/reporter.zip" "$REPORTER_MACOS_PATH"
+
+REPORTER_UBUNTU_PATH="$BUILD_DIRECTORY/reporter_${VERSION_NUMBER}_${BUILD_NUMBER}_ubuntu_noble_amd64.zip"
+PACKAGE_FILENAME="reporter_${VERSION_NUMBER}_${DISTRO}_${OS_VERSION}_${ARCHITECTURE}.deb"
+cp "$ARTIFACTS_DIRECTORY/reporter-linux/reporter.deb" "$REPORTER_UBUNTU_PATH"
+
 # if $RELEASE ; then
-#
-#     mkdir -p ~/.appstoreconnect/private_keys/
-#     echo -n "$APPLE_API_KEY_BASE64" | base64 --decode -o ~/".appstoreconnect/private_keys/AuthKey_$APPLE_API_KEY_ID.p8"
-#     ls ~/.appstoreconnect/private_keys/
-#
-#     # Validate and upload the iOS build.
-#     xcrun altool --validate-app \
-#         -f "$IPA_PATH" \
-#         --apiKey "$APPLE_API_KEY_ID" \
-#         --apiIssuer "$APPLE_API_KEY_ISSUER_ID" \
-#         --output-format json \
-#         --type ios
-#     xcrun altool --upload-app \
-#         -f "$IPA_PATH" \
-#         --primary-bundle-id "uk.co.inseven.opolua" \
-#         --apiKey "$APPLE_API_KEY_ID" \
-#         --apiIssuer "$APPLE_API_KEY_ISSUER_ID" \
-#         --type ios
-#
-#     # Validate and upload the macOS build.
-#     xcrun altool --validate-app \
-#         -f "$PKG_PATH" \
-#         --apiKey "$APPLE_API_KEY_ID" \
-#         --apiIssuer "$APPLE_API_KEY_ISSUER_ID" \
-#         --output-format json \
-#         --type macos
-#     xcrun altool --upload-app \
-#         -f "$PKG_PATH" \
-#         --primary-bundle-id "uk.co.inseven.opolua" \
-#         --apiKey "$APPLE_API_KEY_ID" \
-#         --apiIssuer "$APPLE_API_KEY_ISSUER_ID" \
-#         --type macos
 #
 #     changes \
 #         release \
