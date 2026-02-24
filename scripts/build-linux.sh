@@ -26,6 +26,7 @@ set -x
 set -u
 
 ROOT_DIRECTORY="$( cd "$( dirname "$( dirname "${BASH_SOURCE[0]}" )" )" &> /dev/null && pwd )"
+ARTIFACTS_DIRECTORY="$BUILD_DIRECTORY/artifacts"
 BUILD_DIRECTORY="$ROOT_DIRECTORY/build"
 SCRIPTS_DIRECTORY="$ROOT_DIRECTORY/scripts"
 SWIFT_BUILD_DIRECTORY="$ROOT_DIRECTORY/.build"
@@ -40,6 +41,10 @@ if [ -d "$BUILD_DIRECTORY" ] ; then
     rm -r "$BUILD_DIRECTORY"
 fi
 mkdir -p "$BUILD_DIRECTORY"
+if [ -d "$ARTIFACTS_DIRECTORY" ] ; then
+    rm -r "$ARTIFACTS_DIRECTORY"
+fi
+mkdir -p "$ARTIFACTS_DIRECTORY"
 
 # Determine the version and build number.
 # We expect these to be injected in by our GitHub build job so we just ensure there are sensible defaults.
@@ -63,9 +68,41 @@ swift build \
 "$SWIFT_BUILD_DIRECTORY/debug/reporter" --version
 "$SWIFT_BUILD_DIRECTORY/release/reporter" --version
 
-# Copy the release binary to the build directory.
-cp "$SWIFT_BUILD_DIRECTORY/release/reporter" "$BUILD_DIRECTORY/reporter"
-
-# Package up the build.
 cd "$BUILD_DIRECTORY"
-zip --symlinks -r "build.zip" "reporter"
+
+# Package.
+source /etc/os-release
+DISTRO=$ID
+DESCRIPTION="File change report generator with built-in mailer."
+URL="https://github.com/inseven/reporter"
+MAINTAINER="Jason Morley <support@jbmorley.co.uk>"
+
+case $DISTRO in
+    ubuntu|debian)
+
+        ARCHITECTURE=`dpkg --print-architecture`
+        source /etc/lsb-release
+        OS_VERSION="$DISTRIB_RELEASE"
+        PACKAGE_FILENAME="reporter_${VERSION_NUMBER}_${DISTRO}_${OS_VERSION}_${ARCHITECTURE}.deb"
+        fpm \
+            -s dir \
+            -t deb \
+            -p "$PACKAGE_FILENAME" \
+            --name "reporter" \
+            --version $VERSION_NUMBER \
+            --architecture "$ARCHITECTURE" \
+            --description "$DESCRIPTION" \
+            --url "$URL" \
+            --maintainer "$MAINTAINER" \
+            --depends libssl \
+            --chdir "$INSTALL_DIRECTORY" \
+            "$SWIFT_BUILD_DIRECTORY/release/reporter=/usr/bin/reporter"
+        ;;
+
+    *)
+        fatal "Error: Unsupported distribution: $DISTRO."
+        ;;
+esac
+
+# Copy the release binary to the artifacts directory.
+cp "$PACKAGE_FILENAME" "$ARTIFACTS_DIRECTORY"
