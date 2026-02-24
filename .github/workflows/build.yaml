@@ -69,6 +69,9 @@ jobs:
       run: scripts/install-dependencies.sh
 
     - name: Build, test, and release
+      env:
+        DEVELOPER_ID_APPLICATION_CERTIFICATE_BASE64: ${{ secrets.PERSONAL_DEVELOPER_ID_APPLICATION_CERTIFICATE_BASE64 }}
+        DEVELOPER_ID_APPLICATION_CERTIFICATE_PASSWORD: ${{ secrets.PERSONAL_DEVELOPER_ID_APPLICATION_CERTIFICATE_PASSWORD }}
       run: |
         scripts/build-macos.sh
 

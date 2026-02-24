@@ -122,6 +122,9 @@ swift build -c release -Xcc "-DVERSION_NUMBER=\"$VERSION_NUMBER\"" -Xcc "-DBUILD
 "$SWIFT_BUILD_DIRECTORY/debug/reporter" --version
 "$SWIFT_BUILD_DIRECTORY/release/reporter" --version
 
+# Import the certificates into our dedicated keychain.
+echo "$DEVELOPER_ID_APPLICATION_CERTIFICATE_PASSWORD" | build-tools import-base64-certificate --password "$KEYCHAIN_PATH" "$DEVELOPER_ID_APPLICATION_CERTIFICATE_BASE64"
+
 pushd Reporter
 
 # Build and archive the command (using Xcode).
