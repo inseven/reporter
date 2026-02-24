@@ -141,7 +141,15 @@ jobs:
         git submodule update --init --depth 1 scripts/build-tools
         git submodule update --init --depth 1 scripts/changes
 
+    - name: Install the tool dependencies
+      uses: jdx/mise-action@v2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     - name: Install dependencies
+      run: scripts/install-dependencies.sh
+
+    - name: Install Linux-specific dependencies
       run: scripts/install-linux-dependencies.sh
 
     - uses: actions/download-artifact@v4
