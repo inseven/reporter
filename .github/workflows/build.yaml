@@ -82,7 +82,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: reporter-macos
-        path: build/build.zip
+        path: build/artifacts/*
         if-no-files-found: error
 
   linux-build:
@@ -152,7 +152,8 @@ jobs:
     - name: Publish release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        RELEASE: ${{ github.ref == 'refs/heads/main' }}
+        # RELEASE: ${{ github.ref == 'refs/heads/main' }}
+        RELEASE: false
 
       run: scripts/release.sh
 

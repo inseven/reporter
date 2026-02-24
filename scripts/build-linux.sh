@@ -42,9 +42,6 @@ if [ -d "$BUILD_DIRECTORY" ] ; then
     rm -r "$BUILD_DIRECTORY"
 fi
 mkdir -p "$BUILD_DIRECTORY"
-if [ -d "$ARTIFACTS_DIRECTORY" ] ; then
-    rm -r "$ARTIFACTS_DIRECTORY"
-fi
 mkdir -p "$ARTIFACTS_DIRECTORY"
 
 # Determine the version and build number.
