@@ -151,7 +151,8 @@ echo "$APPLE_API_KEY_BASE64" | base64 -d > "$API_KEY_PATH"
 build-tools notarize "$BUILD_DIRECTORY/reporter" \
     --key "$API_KEY_PATH" \
     --key-id "$APPLE_API_KEY_ID" \
-    --issuer "$APPLE_API_KEY_ISSUER_ID"
+    --issuer "$APPLE_API_KEY_ISSUER_ID" \
+    --skip-staple
 
 # Package up the build.
 cd "$BUILD_DIRECTORY"
