@@ -28,29 +28,104 @@ set -u
 ROOT_DIRECTORY="$( cd "$( dirname "$( dirname "${BASH_SOURCE[0]}" )" )" &> /dev/null && pwd )"
 SCRIPTS_DIRECTORY="$ROOT_DIRECTORY/scripts"
 SWIFT_BUILD_DIRECTORY="$ROOT_DIRECTORY/.build"
+BUILD_DIRECTORY="$ROOT_DIRECTORY/build"
+ARCHIVE_PATH="$BUILD_DIRECTORY/Reporter.xcarchive"
 
 source "$SCRIPTS_DIRECTORY/environment.sh"
 
-# Remove the build directory if it exists to force a full rebuild.
+# Check that the GitHub command is available on the path.
+which gh || (echo "GitHub cli (gh) not available on the path." && exit 1)
+
+# Process the command line arguments.
+POSITIONAL=()
+RELEASE=${RELEASE:-false}
+while [[ $# -gt 0 ]]
+do
+    key="$1"
+    case $key in
+        -r|--release)
+        RELEASE=true
+        shift
+        ;;
+        *)
+        POSITIONAL+=("$1")
+        shift
+        ;;
+    esac
+done
+
+# Generate a random string to secure the local keychain.
+export TEMPORARY_KEYCHAIN_PASSWORD=`openssl rand -base64 14`
+
+# Source the .env file if it exists to make local development easier.
+if [ -f "$ENV_PATH" ] ; then
+    echo "Sourcing .env..."
+    source "$ENV_PATH"
+fi
+
+cd "$ROOT_DIRECTORY"
+
+# Select the correct Xcode.
+sudo xcode-select --switch "$MACOS_XCODE_PATH"
+
+# Clean up and recreate the output directories.
+
 if [ -d "$SWIFT_BUILD_DIRECTORY" ] ; then
     rm -rf "$SWIFT_BUILD_DIRECTORY"
 fi
 
+if [ -d "$BUILD_DIRECTORY" ] ; then
+    rm -r "$BUILD_DIRECTORY"
+fi
+mkdir -p "$BUILD_DIRECTORY"
+
+# Create the a new keychain.
+if [ -d "$TEMPORARY_DIRECTORY" ] ; then
+    rm -rf "$TEMPORARY_DIRECTORY"
+fi
+mkdir -p "$TEMPORARY_DIRECTORY"
+echo "$TEMPORARY_KEYCHAIN_PASSWORD" | build-tools create-keychain "$KEYCHAIN_PATH" --password
+
+function cleanup {
+
+    # Cleanup the temporary files, keychain and keys.
+    cd "$ROOT_DIRECTORY"
+    build-tools delete-keychain "$KEYCHAIN_PATH"
+    rm -rf "$TEMPORARY_DIRECTORY"
+    rm -rf ~/.appstoreconnect/private_keys
+}
+
+trap cleanup EXIT
+
 # Log the Swift version.
 swift --version
+
+# Determine the version and build number.
+# We expect these to be injected in by our GitHub build job so we just ensure there are sensible defaults.
+VERSION_NUMBER=${VERSION_NUMBER:-0.0.0}
+BUILD_NUMBER=${BUILD_NUMBER:-0}
 
 # Run the tests.
 swift test
 
 # Build the project (debug and release).
-
-VERSION_NUMBER=`changes version`
-BUILD_NUMBER=`build-tools generate-build-number`
-
+# We do this as part of the macOS builds (as well as the Linux builds) even though it's not strictly necessary to ensure
+# we've not broken the ability to build and run without Xcode.
 swift build -Xcc "-DVERSION_NUMBER=\"$VERSION_NUMBER\"" -Xcc "-DBUILD_NUMBER=\"$BUILD_NUMBER\""
 swift build -c release -Xcc "-DVERSION_NUMBER=\"$VERSION_NUMBER\"" -Xcc "-DBUILD_NUMBER=\"$BUILD_NUMBER\""
 
-# Ensure the commands have been created and run.
-
+# Ensure the commands have been created and can run.
 "$SWIFT_BUILD_DIRECTORY/debug/reporter" --version
 "$SWIFT_BUILD_DIRECTORY/release/reporter" --version
+
+pushd Reconnect
+
+# Build and archive the command (using Xcode).
+xcodebuild \
+    -project Reconnect.xcodeproj \
+    -scheme "Reconnect" \
+    -archivePath "$ARCHIVE_PATH" \
+    OTHER_CODE_SIGN_FLAGS="--keychain=\"${KEYCHAIN_PATH}\"" \
+    MARKETING_VERSION=$VERSION_NUMBER \
+    CURRENT_PROJECT_VERSION=$BUILD_NUMBER \
+    clean archive
