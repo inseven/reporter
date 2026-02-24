@@ -37,9 +37,6 @@ KEYCHAIN_PATH="$TEMPORARY_DIRECTORY/temporary.keychain"
 
 source "$SCRIPTS_DIRECTORY/environment.sh"
 
-# Check that the GitHub command is available on the path.
-which gh || (echo "GitHub cli (gh) not available on the path." && exit 1)
-
 # Generate a random string to secure the local keychain.
 export TEMPORARY_KEYCHAIN_PASSWORD=`openssl rand -base64 14`
 
