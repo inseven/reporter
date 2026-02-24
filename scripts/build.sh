@@ -27,12 +27,13 @@ set -u
 
 ROOT_DIRECTORY="$( cd "$( dirname "$( dirname "${BASH_SOURCE[0]}" )" )" &> /dev/null && pwd )"
 SCRIPTS_DIRECTORY="$ROOT_DIRECTORY/scripts"
+SWIFT_BUILD_DIRECTORY="$ROOT_DIRECTORY/.build"
 
 source "$SCRIPTS_DIRECTORY/environment.sh"
 
 # Remove the build directory if it exists to force a full rebuild.
-if [ -d .build ] ; then
-    rm -rf .build
+if [ -d "$SWIFT_BUILD_DIRECTORY" ] ; then
+    rm -rf "$SWIFT_BUILD_DIRECTORY"
 fi
 
 # Log the Swift version.
@@ -48,3 +49,8 @@ BUILD_NUMBER=`build-tools generate-build-number`
 
 swift build -Xcc "-DVERSION_NUMBER=\"$VERSION_NUMBER\"" -Xcc "-DBUILD_NUMBER=\"$BUILD_NUMBER\""
 swift build -c release -Xcc "-DVERSION_NUMBER=\"$VERSION_NUMBER\"" -Xcc "-DBUILD_NUMBER=\"$BUILD_NUMBER\""
+
+# Ensure the commands have been created and run.
+
+"$SWIFT_BUILD_DIRECTORY/debug/reporter" --version
+"$SWIFT_BUILD_DIRECTORY/release/reporter" --version

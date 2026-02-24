@@ -27,6 +27,14 @@ let package = Package(
     platforms: [
         .macOS(.v13),
     ],
+    products: [
+        .library(
+            name: "ReporterCore",
+            targets: [
+                "ReporterCore",
+            ]
+        )
+    ],
     dependencies: [
         .package(path: "dependencies/Swift-SMTP"),
         .package(url: "https://github.com/apple/swift-argument-parser", from: "1.3.0"),
