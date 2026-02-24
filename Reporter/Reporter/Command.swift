@@ -23,7 +23,6 @@ import Foundation
 import ArgumentParser
 
 import ReporterCore
-import ReporterMetadata
 
 @main
 struct Command: AsyncParsableCommand {

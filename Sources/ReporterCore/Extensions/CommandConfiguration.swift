@@ -22,12 +22,14 @@ import Foundation
 
 import ArgumentParser
 
-import ReporterCore
-import ReporterMetadata
+extension CommandConfiguration {
 
-@main
-struct Command: AsyncParsableCommand {
-
-    public static let configuration: CommandConfiguration = .reporter
+    public static let reporter = CommandConfiguration(
+        commandName: "reporter",
+        version: App.fullyQualifiedVersion,
+        subcommands: [
+            CommandScan.self,
+            CommandSendTestEmail.self,
+        ])
 
 }
