@@ -78,6 +78,13 @@ jobs:
       run: |
         scripts/build-macos.sh
 
+    - name: Archive the binary
+      uses: actions/upload-artifact@v4
+      with:
+        name: reporter-ios
+        path: build/build.zip
+        if-no-files-found: error
+
   linux-build:
     runs-on: ubuntu-latest
 
