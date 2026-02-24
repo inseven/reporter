@@ -136,7 +136,7 @@ xcodebuild \
     OTHER_CODE_SIGN_FLAGS="--keychain=\"${KEYCHAIN_PATH}\"" \
     MARKETING_VERSION=$VERSION_NUMBER \
     CURRENT_PROJECT_VERSION=$BUILD_NUMBER \
-    GCC_PREPROCESSOR_DEFINITIONS="\$inherited VERSION_NUMBER=\\\"$VERSION_NUMBER\\\" BUILD_NUMBER=\\\"$BUILD_NUMBER\\\""
+    GCC_PREPROCESSOR_DEFINITIONS="\$inherited VERSION_NUMBER=\\\"$VERSION_NUMBER\\\" BUILD_NUMBER=\\\"$BUILD_NUMBER\\\"" \
     clean archive
 
 # N.B. We do not currently attempt to export this archive as it's apparently a 'generic' archive that xcodebuild doesn't
