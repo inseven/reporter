@@ -91,9 +91,8 @@ jobs:
         lfs: true
 
     - name: Install dependencies
-      run: scripts/install-dependencies.sh
+      run: scripts/install-linux-dependencies.sh
 
     - name: Build, test, and release
       run: |
         scripts/build-linux.sh
-
