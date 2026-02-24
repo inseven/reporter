@@ -136,3 +136,14 @@ xcodebuild \
     MARKETING_VERSION=$VERSION_NUMBER \
     CURRENT_PROJECT_VERSION=$BUILD_NUMBER \
     clean archive
+
+# N.B. We do not currently attempt to export this archive as it's apparently a 'generic' archive that xcodebuild doesn't
+# know what to do with. Instead, we pluck our binary directly out of the archive as we know where it is and we're going
+# to package it and notarize it ourselves.
+cp "$ARCHIVE_PATH/Products/usr/local/bin/reporter" "$BUILD_DIRECTORY/reporter"
+
+# Notarize the command.
+build-tools notarize "$BUILD_DIRECTORY/reporter" \
+    --key "$API_KEY_PATH" \
+    --key-id "$APPLE_API_KEY_ID" \
+    --issuer "$APPLE_API_KEY_ISSUER_ID"
