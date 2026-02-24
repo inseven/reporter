@@ -26,9 +26,10 @@ set -x
 set -u
 
 ROOT_DIRECTORY="$( cd "$( dirname "$( dirname "${BASH_SOURCE[0]}" )" )" &> /dev/null && pwd )"
-BUILD_DIRECTORY="$ROOT_DIRECTORY/build"
 SCRIPTS_DIRECTORY="$ROOT_DIRECTORY/scripts"
+BUILD_DIRECTORY="$ROOT_DIRECTORY/build"
 SWIFT_BUILD_DIRECTORY="$ROOT_DIRECTORY/.build"
+ARTIFACTS_DIRECTORY="$BUILD_DIRECTORY/artifacts"
 TEMPORARY_DIRECTORY="$ROOT_DIRECTORY/temp"
 
 ARCHIVE_PATH="$BUILD_DIRECTORY/Reporter.xcarchive"
@@ -36,9 +37,6 @@ ENV_PATH="$ROOT_DIRECTORY/.env"
 KEYCHAIN_PATH="$TEMPORARY_DIRECTORY/temporary.keychain"
 
 source "$SCRIPTS_DIRECTORY/environment.sh"
-
-# Check that the GitHub command is available on the path.
-which gh || (echo "GitHub cli (gh) not available on the path." && exit 1)
 
 # Generate a random string to secure the local keychain.
 export TEMPORARY_KEYCHAIN_PASSWORD=`openssl rand -base64 14`
@@ -62,6 +60,7 @@ if [ -d "$BUILD_DIRECTORY" ] ; then
     rm -r "$BUILD_DIRECTORY"
 fi
 mkdir -p "$BUILD_DIRECTORY"
+mkdir -p "$ARTIFACTS_DIRECTORY"
 
 # Create the a new keychain.
 if [ -d "$TEMPORARY_DIRECTORY" ] ; then
@@ -138,4 +137,7 @@ build-tools notarize "$BUILD_DIRECTORY/reporter" \
 
 # Package up the build.
 cd "$BUILD_DIRECTORY"
-zip --symlinks -r "build.zip" "reporter"
+zip --symlinks -r "reporter.zip" "reporter"
+
+# Copy the release to the artifacts directory.
+cp "reporter.zip" "$ARTIFACTS_DIRECTORY"
