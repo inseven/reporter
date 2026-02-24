@@ -109,3 +109,10 @@ jobs:
     - name: Build, test, and release
       run: |
         scripts/build-linux.sh
+
+    - name: Archive the binary
+      uses: actions/upload-artifact@v4
+      with:
+        name: reporter-linux
+        path: build/build.zip
+        if-no-files-found: error

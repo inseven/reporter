@@ -40,24 +40,6 @@ source "$SCRIPTS_DIRECTORY/environment.sh"
 # Check that the GitHub command is available on the path.
 which gh || (echo "GitHub cli (gh) not available on the path." && exit 1)
 
-# Process the command line arguments.
-POSITIONAL=()
-RELEASE=${RELEASE:-false}
-while [[ $# -gt 0 ]]
-do
-    key="$1"
-    case $key in
-        -r|--release)
-        RELEASE=true
-        shift
-        ;;
-        *)
-        POSITIONAL+=("$1")
-        shift
-        ;;
-    esac
-done
-
 # Generate a random string to secure the local keychain.
 export TEMPORARY_KEYCHAIN_PASSWORD=`openssl rand -base64 14`
 
@@ -73,11 +55,9 @@ cd "$ROOT_DIRECTORY"
 sudo xcode-select --switch "$MACOS_XCODE_PATH"
 
 # Clean up and recreate the output directories.
-
 if [ -d "$SWIFT_BUILD_DIRECTORY" ] ; then
     rm -rf "$SWIFT_BUILD_DIRECTORY"
 fi
-
 if [ -d "$BUILD_DIRECTORY" ] ; then
     rm -r "$BUILD_DIRECTORY"
 fi

@@ -31,10 +31,14 @@ SWIFT_BUILD_DIRECTORY="$ROOT_DIRECTORY/.build"
 
 source "$SCRIPTS_DIRECTORY/environment.sh"
 
-# Remove the build directory if it exists to force a full rebuild.
+# Clean up and recreate the output directories.
 if [ -d "$SWIFT_BUILD_DIRECTORY" ] ; then
     rm -rf "$SWIFT_BUILD_DIRECTORY"
 fi
+if [ -d "$BUILD_DIRECTORY" ] ; then
+    rm -r "$BUILD_DIRECTORY"
+fi
+mkdir -p "$BUILD_DIRECTORY"
 
 # Determine the version and build number.
 # We expect these to be injected in by our GitHub build job so we just ensure there are sensible defaults.
@@ -54,3 +58,10 @@ swift build -c release -Xcc "-DVERSION_NUMBER=\"$VERSION_NUMBER\"" -Xcc "-DBUILD
 # Ensure the commands have been created and can run.
 "$SWIFT_BUILD_DIRECTORY/debug/reporter" --version
 "$SWIFT_BUILD_DIRECTORY/release/reporter" --version
+
+# Copy the release binary to the build directory.
+cp "$SWIFT_BUILD_DIRECTORY/release/reporter" "$BUILD_DIRECTORY/reporter"
+
+# Package up the build.
+cd "$BUILD_DIRECTORY"
+zip --symlinks -r "build.zip" "reporter"
