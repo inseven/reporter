@@ -96,7 +96,6 @@ case $DISTRO in
             --url "$URL" \
             --maintainer "$MAINTAINER" \
             --depends libssl \
-            --chdir "$INSTALL_DIRECTORY" \
             "$SWIFT_BUILD_DIRECTORY/release/reporter=/usr/bin/reporter"
         ;;
 
