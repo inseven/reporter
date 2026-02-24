@@ -92,7 +92,7 @@ case $DISTRO in
             --description "$DESCRIPTION" \
             --url "$URL" \
             --maintainer "$MAINTAINER" \
-            --depends libssl \
+            --depends libssl3 \
             "$SWIFT_BUILD_DIRECTORY/release/reporter=/usr/bin/reporter"
         ;;
 
