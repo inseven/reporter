@@ -54,7 +54,10 @@ swift test
 
 # Build the project (debug and release).
 swift build -Xcc "-DVERSION_NUMBER=\"$VERSION_NUMBER\"" -Xcc "-DBUILD_NUMBER=\"$BUILD_NUMBER\""
-swift build -c release -Xcc "-DVERSION_NUMBER=\"$VERSION_NUMBER\"" -Xcc "-DBUILD_NUMBER=\"$BUILD_NUMBER\""
+swift build \
+    -c release \
+    -Xcc "-DVERSION_NUMBER=\"$VERSION_NUMBER\"" -Xcc "-DBUILD_NUMBER=\"$BUILD_NUMBER\"" \
+    -Xswiftc -static-stdlib
 
 # Ensure the commands have been created and can run.
 "$SWIFT_BUILD_DIRECTORY/debug/reporter" --version
