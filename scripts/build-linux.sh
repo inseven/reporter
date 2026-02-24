@@ -26,6 +26,7 @@ set -x
 set -u
 
 ROOT_DIRECTORY="$( cd "$( dirname "$( dirname "${BASH_SOURCE[0]}" )" )" &> /dev/null && pwd )"
+BUILD_DIRECTORY="$ROOT_DIRECTORY/build"
 SCRIPTS_DIRECTORY="$ROOT_DIRECTORY/scripts"
 SWIFT_BUILD_DIRECTORY="$ROOT_DIRECTORY/.build"
 
