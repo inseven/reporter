@@ -137,7 +137,7 @@ build-tools notarize "$BUILD_DIRECTORY/reporter" \
 
 # Package up the build.
 cd "$BUILD_DIRECTORY"
-zip --symlinks -r "reporter-macos.zip" "reporter"
+zip --symlinks -r "reporter.zip" "reporter"
 
 # Copy the release to the artifacts directory.
-cp "reporter-macos.zip" "$ARTIFACTS_DIRECTORY"
+cp "reporter.zip" "$ARTIFACTS_DIRECTORY"
