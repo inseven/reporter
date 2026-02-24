@@ -156,4 +156,4 @@ build-tools notarize "$BUILD_DIRECTORY/reporter" \
 
 # Package up the build.
 cd "$BUILD_DIRECTORY"
-zip --symlinks -r "build.zip" "OpoLua.ipa" "OpoLua.pkg"
+zip --symlinks -r "build.zip" "reporter"
