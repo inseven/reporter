@@ -127,7 +127,7 @@ pushd Reporter
 # Build and archive the command (using Xcode).
 xcodebuild \
     -project Reporter.xcodeproj \
-    -scheme "Reporter" \
+    -scheme "reporter" \
     -archivePath "$ARCHIVE_PATH" \
     OTHER_CODE_SIGN_FLAGS="--keychain=\"${KEYCHAIN_PATH}\"" \
     MARKETING_VERSION=$VERSION_NUMBER \
