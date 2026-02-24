@@ -26,10 +26,11 @@ set -x
 set -u
 
 ROOT_DIRECTORY="$( cd "$( dirname "$( dirname "${BASH_SOURCE[0]}" )" )" &> /dev/null && pwd )"
-ARTIFACTS_DIRECTORY="$BUILD_DIRECTORY/artifacts"
-BUILD_DIRECTORY="$ROOT_DIRECTORY/build"
 SCRIPTS_DIRECTORY="$ROOT_DIRECTORY/scripts"
+BUILD_DIRECTORY="$ROOT_DIRECTORY/build"
 SWIFT_BUILD_DIRECTORY="$ROOT_DIRECTORY/.build"
+ARTIFACTS_DIRECTORY="$BUILD_DIRECTORY/artifacts"
+
 
 source "$SCRIPTS_DIRECTORY/environment.sh"
 
