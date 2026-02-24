@@ -29,7 +29,9 @@ ROOT_DIRECTORY="$( cd "$( dirname "$( dirname "${BASH_SOURCE[0]}" )" )" &> /dev/
 SCRIPTS_DIRECTORY="$ROOT_DIRECTORY/scripts"
 SWIFT_BUILD_DIRECTORY="$ROOT_DIRECTORY/.build"
 BUILD_DIRECTORY="$ROOT_DIRECTORY/build"
+
 ARCHIVE_PATH="$BUILD_DIRECTORY/Reporter.xcarchive"
+ENV_PATH="$ROOT_DIRECTORY/.env"
 
 source "$SCRIPTS_DIRECTORY/environment.sh"
 
