@@ -142,6 +142,11 @@ xcodebuild \
 # to package it and notarize it ourselves.
 cp "$ARCHIVE_PATH/Products/usr/local/bin/reporter" "$BUILD_DIRECTORY/reporter"
 
+# Notarization.
+
+API_KEY_PATH="$TEMPORARY_DIRECTORY/api.key"
+echo "$APPLE_API_KEY_BASE64" | base64 -d > "$API_KEY_PATH"
+
 # Notarize the command.
 build-tools notarize "$BUILD_DIRECTORY/reporter" \
     --key "$API_KEY_PATH" \
