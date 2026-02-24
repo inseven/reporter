@@ -122,12 +122,12 @@ swift build -c release -Xcc "-DVERSION_NUMBER=\"$VERSION_NUMBER\"" -Xcc "-DBUILD
 "$SWIFT_BUILD_DIRECTORY/debug/reporter" --version
 "$SWIFT_BUILD_DIRECTORY/release/reporter" --version
 
-pushd Reconnect
+pushd Reporter
 
 # Build and archive the command (using Xcode).
 xcodebuild \
-    -project Reconnect.xcodeproj \
-    -scheme "Reconnect" \
+    -project Reporter.xcodeproj \
+    -scheme "Reporter" \
     -archivePath "$ARCHIVE_PATH" \
     OTHER_CODE_SIGN_FLAGS="--keychain=\"${KEYCHAIN_PATH}\"" \
     MARKETING_VERSION=$VERSION_NUMBER \
