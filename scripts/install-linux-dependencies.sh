@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Copyright (c) 2024-2026 Jason Morley
 #
@@ -25,30 +25,38 @@ set -o pipefail
 set -x
 set -u
 
-ROOT_DIRECTORY="$( cd "$( dirname "$( dirname "${BASH_SOURCE[0]}" )" )" &> /dev/null && pwd )"
-SCRIPTS_DIRECTORY="$ROOT_DIRECTORY/scripts"
+function fatal {
+    echo $1 >&2
+    exit 1
+}
 
-LOCAL_TOOLS_PATH="$ROOT_DIRECTORY/.local"
-CHANGES_DIRECTORY="$SCRIPTS_DIRECTORY/changes"
-BUILD_TOOLS_DIRECTORY="$SCRIPTS_DIRECTORY/build-tools"
-
-# Install tools defined in `.tool-versions`.
-cd "$ROOT_DIRECTORY"
-mise install
-
-# Clean up and recreate the local tools directory.
-if [ -d "$LOCAL_TOOLS_PATH" ] ; then
-    rm -r "$LOCAL_TOOLS_PATH"
+# $USER is unbound in GitHub Actions containers. We check this as a way of inferring that we shouldn't be using sudo.
+if [ -z ${USER+x} ]; then
+    SUDO=""
+else
+    SUDO="sudo"
 fi
-mkdir -p "$LOCAL_TOOLS_PATH"
 
-# Set up a Python venv to bootstrap our python dependency on `pipenv`.
-python -m venv "$LOCAL_TOOLS_PATH/python"
+# Install the per-platform build dependencies.
+source /etc/os-release
+case $ID in
+    ubuntu|debian)
+        $SUDO apt-get update -y
+        $SUDO apt-get install -y \
+            build-essential git \
+            ruby ruby-bundler
+        $SUDO gem install --no-user-install fpm
+        ;;
 
-# Source `environment.sh` to ensure the remainder of our paths are set up correctly.
-source "$SCRIPTS_DIRECTORY/environment.sh"
+    arch|manjaro)
+        $SUDO pacman -Syu --noconfirm
+        $SUDO pacman -S --noconfirm --needed \
+            base-devel git \
+            ruby rubygems ruby-erb
+        $SUDO gem install --no-user-install fpm
+        ;;
 
-# Install the Python dependencies.
-pip install --upgrade pip pipenv wheel certifi
-PIPENV_PIPFILE="$CHANGES_DIRECTORY/Pipfile" pipenv install
-PIPENV_PIPFILE="$BUILD_TOOLS_DIRECTORY/Pipfile" pipenv install
+    *)
+        fatal "Error: Unsupported distribution: $ID."
+        ;;
+esac
