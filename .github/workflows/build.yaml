@@ -30,6 +30,11 @@ jobs:
         git submodule update --init --depth 1 scripts/build-tools
         git submodule update --init --depth 1 scripts/changes
 
+    - name: Install the tool dependencies
+      uses: jdx/mise-action@v2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     - name: Install dependencies
       run: scripts/install-dependencies.sh
 
@@ -43,7 +48,7 @@ jobs:
         echo "build_number=$BUILD_NUMBER" >> $GITHUB_OUTPUT
 
   macos-build:
-    runs-on: macos-latest
+    runs-on: inseven-macos-26
 
     needs:
     - generate-version-number
