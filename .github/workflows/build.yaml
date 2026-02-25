@@ -220,3 +220,17 @@ jobs:
         name: build
         path: build/*
         if-no-files-found: error
+
+  update-releases:
+    needs: publish-release
+    # if: ${{ github.ref == 'refs/heads/main' }}
+
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Update releases repository
+      uses: peter-evans/repository-dispatch@v3
+      with:
+        token: ${{ secrets._GITHUB_ACCESS_TOKEN }}
+        repository: inseven/releases
+        event-type: build
