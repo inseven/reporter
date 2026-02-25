@@ -86,7 +86,54 @@ jobs:
         if-no-files-found: error
 
   linux-build:
-    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        include:
+
+        - name: ubuntu-questing-amd64
+          os: ubuntu-24.04
+          container: ubuntu:questing
+          setup: |
+            apt-get update -y
+            apt-get install -y build-essential git swiftlang
+
+#         - name: ubuntu-25.10-arm64
+#           os: ubuntu-24.04-arm
+#           container: ubuntu:questing
+#           setup: |
+#             apt-get update -y
+#             apt-get install -y build-essential git
+#
+#         - name: ubuntu-25.04-amd64
+#           os: ubuntu-24.04
+#           container: ubuntu:plucky
+#           setup: |
+#             apt-get update -y
+#             apt-get install -y build-essential git
+#
+#         - name: ubuntu-25.04-arm64
+#           os: ubuntu-24.04-arm
+#           container: ubuntu:plucky
+#           setup: |
+#             apt-get update -y
+#             apt-get install -y build-essential git
+
+        - name: ubuntu-noble-amd64
+          os: ubuntu-24.04
+#
+#         - name: ubuntu-24.04-arm64
+#           os: ubuntu-24.04-arm
+#
+#         - name: arch-latest-x86_64
+#           os: ubuntu-24.04
+#           container: archlinux:latest
+#           setup: |
+#             pacman -Syu --noconfirm
+#             pacman -S --noconfirm --needed base-devel git
+
+    name: ${{ matrix.name }}-build
+    runs-on: ${{ matrix.os }}
+    container: ${{ matrix.container || '' }}
 
     needs:
     - generate-version-number
@@ -97,11 +144,14 @@ jobs:
 
     steps:
 
+    - name: Setup container
+      if: ${{ matrix.setup != '' }}
+      run: ${{ matrix.setup }}
+
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
         submodules: recursive
-        lfs: true
 
     - name: Install dependencies
       run: scripts/install-linux-dependencies.sh
@@ -113,7 +163,7 @@ jobs:
     - name: Archive the binary
       uses: actions/upload-artifact@v4
       with:
-        name: reporter-linux
+        name: reporter-${{ matrix.name }}
         path: build/artifacts/*
         if-no-files-found: error
 

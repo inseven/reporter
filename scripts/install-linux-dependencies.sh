@@ -44,7 +44,8 @@ case $ID in
         $SUDO apt-get update -y
         $SUDO apt-get install -y \
             build-essential git \
-            ruby ruby-bundler
+            ruby ruby-bundler \
+            libssl-dev
         $SUDO gem install --no-user-install fpm
         ;;
 
