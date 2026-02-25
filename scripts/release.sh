@@ -96,7 +96,7 @@ build-tools add-artifact manifest.json \
     --supports-architecture arm64 \
     --supports-architecture x86_64
 
-REPORTER_UBUNTU_NOBLE_NAME="reporter_${VERSION_NUMBER}_${BUILD_NUMBER}~noble1_amd64.deb"
+REPORTER_UBUNTU_NOBLE_NAME="reporter_${VERSION_NUMBER}~noble${BUILD_NUMBER}_amd64.deb"
 cp "$ARTIFACTS_DIRECTORY/reporter-ubuntu-noble-amd64/reporter.deb" "$REPORTER_UBUNTU_NOBLE_NAME"
 
 build-tools add-artifact manifest.json \
@@ -111,7 +111,7 @@ build-tools add-artifact manifest.json \
     --supports-codename noble \
     --supports-architecture amd64
 
-REPORTER_UBUNTU_QUESTING_NAME="reporter_${VERSION_NUMBER}_${BUILD_NUMBER}~questing1_amd64.deb"
+REPORTER_UBUNTU_QUESTING_NAME="reporter_${VERSION_NUMBER}~questing${BUILD_NUMBER}_amd64.deb"
 cp "$ARTIFACTS_DIRECTORY/reporter-ubuntu-questing-amd64/reporter.deb" "$REPORTER_UBUNTU_QUESTING_NAME"
 
 build-tools add-artifact manifest.json \
