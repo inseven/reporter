@@ -111,19 +111,14 @@ build-tools add-artifact manifest.json \
     --supports-codename noble \
     --supports-architecture amd64
 
-# if $RELEASE ; then
-#
-#     changes \
-#         release \
-#         --skip-if-empty \
-#         --push \
-#         --exec "$RELEASE_SCRIPT_PATH" \
-#         "$IPA_PATH" "$PKG_PATH" \
-#         "$QT_MACOS_PATH" \
-#         "$QT_WINDOWS_PATH" \
-#         "$QT_UBUNTU_2404_ARM64_PATH" "$QT_UBUNTU_2404_AMD64_PATH" \
-#         "$QT_UBUNTU_2504_ARM64_PATH" "$QT_UBUNTU_2504_AMD64_PATH" \
-#         "$QT_UBUNTU_2510_ARM64_PATH" "$QT_UBUNTU_2510_AMD64_PATH" \
-#         "$QT_ARCH_ROLLING_X86_64_PATH"
-#
-# fi
+if $RELEASE ; then
+
+    changes \
+        release \
+        --skip-if-empty \
+        --push \
+        --exec "$RELEASE_SCRIPT_PATH" \
+        "$BUILD_DIRECTORY/$REPORTER_MACOS_NAME" \
+        "$BUILD_DIRECTORY/$REPORTER_UBUNTU_NAME"
+
+fi

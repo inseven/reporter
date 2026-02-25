@@ -161,7 +161,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         # RELEASE: ${{ github.ref == 'refs/heads/main' }}
-        RELEASE: false
+        RELEASE: true
 
       run: scripts/release.sh
 
