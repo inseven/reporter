@@ -97,13 +97,13 @@ jobs:
             apt-get update -y
             apt-get install -y build-essential git swiftlang
 
-#         - name: ubuntu-25.10-arm64
-#           os: ubuntu-24.04-arm
-#           container: ubuntu:questing
-#           setup: |
-#             apt-get update -y
-#             apt-get install -y build-essential git
-#
+        - name: ubuntu-questing-arm64
+          os: ubuntu-24.04-arm
+          container: ubuntu:questing
+          setup: |
+            apt-get update -y
+            apt-get install -y build-essential git swiftlang
+
 #         - name: ubuntu-25.04-amd64
 #           os: ubuntu-24.04
 #           container: ubuntu:plucky
@@ -220,3 +220,17 @@ jobs:
         name: build
         path: build/*
         if-no-files-found: error
+
+  update-releases:
+    needs: publish-release
+    if: ${{ github.ref == 'refs/heads/main' }}
+
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Update releases repository
+      uses: peter-evans/repository-dispatch@v4
+      with:
+        token: ${{ secrets._GITHUB_ACCESS_TOKEN }}
+        repository: inseven/releases
+        event-type: build
