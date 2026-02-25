@@ -87,7 +87,7 @@ case $DISTRO in
             -t deb \
             -p "$PACKAGE_FILENAME" \
             --name "reporter" \
-            --version $VERSION_NUMBER \
+            --version "${VERSION_NUMBER}~${DISTRIB_CODENAME}${BUILD_NUMBER}" \
             --architecture "$ARCHITECTURE" \
             --description "$DESCRIPTION" \
             --url "$URL" \
