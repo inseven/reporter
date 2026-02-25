@@ -119,6 +119,7 @@ if $RELEASE ; then
         --push \
         --exec "$RELEASE_SCRIPT_PATH" \
         "$BUILD_DIRECTORY/$REPORTER_MACOS_NAME" \
-        "$BUILD_DIRECTORY/$REPORTER_UBUNTU_NAME"
+        "$BUILD_DIRECTORY/$REPORTER_UBUNTU_NAME" \
+        "$BUILD_DIRECTORY/manifest.json"
 
 fi
