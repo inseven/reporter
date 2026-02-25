@@ -96,19 +96,34 @@ build-tools add-artifact manifest.json \
     --supports-architecture arm64 \
     --supports-architecture x86_64
 
-REPORTER_UBUNTU_NAME="reporter_${VERSION_NUMBER}_${BUILD_NUMBER}_ubuntu_noble_amd64.deb"
-cp "$ARTIFACTS_DIRECTORY/reporter-linux/reporter.deb" "$REPORTER_UBUNTU_NAME"
+REPORTER_UBUNTU_NOBLE_NAME="reporter_${VERSION_NUMBER}_${BUILD_NUMBER}_ubuntu_noble_amd64.deb"
+cp "$ARTIFACTS_DIRECTORY/reporter-ubuntu-noble-amd64/reporter.deb" "$REPORTER_UBUNTU_NOBLE_NAME"
 
 build-tools add-artifact manifest.json \
     --project reporter \
     --version "$VERSION_NUMBER" \
     --build-number "$BUILD_NUMBER" \
-    --path "$REPORTER_UBUNTU_NAME" \
+    --path "$REPORTER_UBUNTU_NOBLE_NAME" \
     --format deb \
     --git-sha "$GIT_SHA" \
     --supports-os ubuntu \
     --supports-version 24.04 \
     --supports-codename noble \
+    --supports-architecture amd64
+
+REPORTER_UBUNTU_QUESTING_NAME="reporter_${VERSION_NUMBER}_${BUILD_NUMBER}_ubuntu_questing_amd64.deb"
+cp "$ARTIFACTS_DIRECTORY/reporter-ubuntu-questing-amd64/reporter.deb" "$REPORTER_UBUNTU_QUESTING_NAME"
+
+build-tools add-artifact manifest.json \
+    --project reporter \
+    --version "$VERSION_NUMBER" \
+    --build-number "$BUILD_NUMBER" \
+    --path "$REPORTER_UBUNTU_QUESTING_NAME" \
+    --format deb \
+    --git-sha "$GIT_SHA" \
+    --supports-os ubuntu \
+    --supports-version 25.10 \
+    --supports-codename questing \
     --supports-architecture amd64
 
 if $RELEASE ; then
@@ -119,7 +134,8 @@ if $RELEASE ; then
         --push \
         --exec "$RELEASE_SCRIPT_PATH" \
         "$BUILD_DIRECTORY/$REPORTER_MACOS_NAME" \
-        "$BUILD_DIRECTORY/$REPORTER_UBUNTU_NAME" \
+        "$BUILD_DIRECTORY/$REPORTER_UBUNTU_NOBLE_NAME" \
+        "$BUILD_DIRECTORY/$REPORTER_UBUNTU_QUESTING_NAME" \
         "$BUILD_DIRECTORY/manifest.json"
 
 fi
