@@ -97,13 +97,13 @@ jobs:
             apt-get update -y
             apt-get install -y build-essential git swiftlang
 
-#         - name: ubuntu-25.10-arm64
-#           os: ubuntu-24.04-arm
-#           container: ubuntu:questing
-#           setup: |
-#             apt-get update -y
-#             apt-get install -y build-essential git
-#
+        - name: ubuntu-questing-arm64
+          os: ubuntu-24.04-arm
+          container: ubuntu:questing
+          setup: |
+            apt-get update -y
+            apt-get install -y build-essential git swiftlang
+
 #         - name: ubuntu-25.04-amd64
 #           os: ubuntu-24.04
 #           container: ubuntu:plucky
