@@ -74,13 +74,42 @@ mkdir -p "$BUILD_DIRECTORY"
 # List the artifacts.
 find "$ARTIFACTS_DIRECTORY"
 
-# Copy the artifacts to the builds directory.
+# Copy the artifacts to the builds directory, adding each to the manifest.
 
-REPORTER_MACOS_PATH="$BUILD_DIRECTORY/reporter-$VERSION_NUMBER-$BUILD_NUMBER.zip"
-cp "$ARTIFACTS_DIRECTORY/reporter-macos/reporter.zip" "$REPORTER_MACOS_PATH"
+cd "$BUILD_DIRECTORY"
 
-REPORTER_UBUNTU_PATH="$BUILD_DIRECTORY/reporter_${VERSION_NUMBER}_${BUILD_NUMBER}_ubuntu_noble_amd64.deb"
-cp "$ARTIFACTS_DIRECTORY/reporter-linux/reporter.deb" "$REPORTER_UBUNTU_PATH"
+GIT_SHA=`git rev-parse HEAD`
+
+REPORTER_MACOS_NAME="reporter-$VERSION_NUMBER-$BUILD_NUMBER.zip"
+cp "$ARTIFACTS_DIRECTORY/reporter-macos/reporter.zip" "$REPORTER_MACOS_NAME"
+
+build-tools add-artifact manifest.json \
+    --project reporter \
+    --version "$VERSION_NUMBER" \
+    --build-number "$BUILD_NUMBER" \
+    --path "$REPORTER_MACOS_NAME" \
+    --format zip \
+    --git-sha "$GIT_SHA" \
+    --supports-os macos \
+    --supports-version 26 \
+    --supports-codename tahoe \
+    --supports-architecture arm64 \
+    --supports-architecture x86_64
+
+REPORTER_UBUNTU_NAME="reporter_${VERSION_NUMBER}_${BUILD_NUMBER}_ubuntu_noble_amd64.deb"
+cp "$ARTIFACTS_DIRECTORY/reporter-linux/reporter.deb" "$REPORTER_UBUNTU_NAME"
+
+build-tools add-artifact manifest.json \
+    --project reporter \
+    --version "$VERSION_NUMBER" \
+    --build-number "$BUILD_NUMBER" \
+    --path "$REPORTER_UBUNTU_NAME" \
+    --format deb \
+    --git-sha "$GIT_SHA" \
+    --supports-os ubuntu \
+    --supports-version 24.04 \
+    --supports-codename noble \
+    --supports-architecture amd64
 
 # if $RELEASE ; then
 #
