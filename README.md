@@ -14,7 +14,20 @@ _This is currently in active development so your mileage may vary, but I'd love 
 
 ## Installation
 
-There are currently no pre-built releases of Reporter. Check out the [Development](#development) section for details of how to build and run it yourself.
+There are currently pre-built binaries for macOS, and for amd64 and arm64 builds of Ubuntu, releases 24.04 (Noble Numbat) and 25.10 (Questing Quokka).
+
+### Ubuntu
+
+```sh
+curl -fsSL https://releases.jbmorley.co.uk/apt/public.asc | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/jbmorley.gpg
+echo "deb https://releases.jbmorley.co.uk/apt $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/jbmorley.list
+sudo apt update
+sudo apt install reporter
+```
+
+### macOS
+
+Download the [latest release](https://github.com/inseven/reporter/releases/latest).
 
 ## Configuration
 
