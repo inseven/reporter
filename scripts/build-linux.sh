@@ -79,7 +79,6 @@ case $DISTRO in
     ubuntu|debian)
 
         ARCHITECTURE=`dpkg --print-architecture`
-        source /etc/lsb-release
         OS_VERSION="$DISTRIB_RELEASE"
         PACKAGE_FILENAME="reporter.deb"
         fpm \
@@ -87,7 +86,7 @@ case $DISTRO in
             -t deb \
             -p "$PACKAGE_FILENAME" \
             --name "reporter" \
-            --version "${VERSION_NUMBER}~${DISTRIB_CODENAME}${BUILD_NUMBER}" \
+            --version "${VERSION_NUMBER}~${VERSION_CODENAME}${BUILD_NUMBER}" \
             --architecture "$ARCHITECTURE" \
             --description "$DESCRIPTION" \
             --url "$URL" \
