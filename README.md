@@ -14,7 +14,7 @@ Most other change detection tools I've been able to find appear to be focused on
 
 ### Debian and Ubuntu
 
-There are currently pre-built amd64 and arm64 binaries for Ubuntu 24.04 (Noble Numbat) and 25.10 (Questing Quokka), and Debian 13 (Trixie).
+There are currently pre-built amd64 and arm64 binaries for Ubuntu 24.04 (Noble Numbat), 25.10 (Questing Quokka), and Debian 13 (Trixie).
 
 ```sh
 curl -fsSL https://releases.jbmorley.co.uk/apt/public.asc | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/jbmorley.gpg
