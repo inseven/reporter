@@ -80,6 +80,8 @@ cd "$BUILD_DIRECTORY"
 
 GIT_SHA=`git rev-parse HEAD`
 
+# macOS.
+
 REPORTER_MACOS_NAME="reporter-$VERSION_NUMBER-$BUILD_NUMBER.zip"
 cp "$ARTIFACTS_DIRECTORY/reporter-macos/reporter.zip" "$REPORTER_MACOS_NAME"
 
@@ -95,6 +97,8 @@ build-tools add-artifact manifest.json \
     --supports-codename tahoe \
     --supports-architecture arm64 \
     --supports-architecture x86_64
+
+# Ubuntu.
 
 REPORTER_UBUNTU_NOBLE_AMD64_NAME="reporter_${VERSION_NUMBER}-noble${BUILD_NUMBER}_amd64.deb"
 cp "$ARTIFACTS_DIRECTORY/reporter-ubuntu-noble-amd64/reporter.deb" "$REPORTER_UBUNTU_NOBLE_AMD64_NAME"
@@ -156,6 +160,39 @@ build-tools add-artifact manifest.json \
     --supports-codename questing \
     --supports-architecture arm64
 
+# Debian.
+
+REPORTER_DEBIAN_TRIXIE_AMD64_NAME="reporter_${VERSION_NUMBER}-trixie${BUILD_NUMBER}_amd64.deb"
+cp "$ARTIFACTS_DIRECTORY/reporter-ubuntu-trixie-amd64/reporter.deb" "$REPORTER_DEBIAN_TRIXIE_AMD64_NAME"
+
+build-tools add-artifact manifest.json \
+    --project reporter \
+    --version "$VERSION_NUMBER" \
+    --build-number "$BUILD_NUMBER" \
+    --path "$REPORTER_DEBIAN_TRIXIE_AMD64_NAME" \
+    --format deb \
+    --git-sha "$GIT_SHA" \
+    --supports-os ubuntu \
+    --supports-version 13 \
+    --supports-codename trixie \
+    --supports-architecture amd64
+
+REPORTER_DEBIAN_TRIXIE_ARM64_NAME="reporter_${VERSION_NUMBER}-trixie${BUILD_NUMBER}_arm64.deb"
+cp "$ARTIFACTS_DIRECTORY/reporter-ubuntu-trixie-arm64/reporter.deb" "$REPORTER_DEBIAN_TRIXIE_ARM64_NAME"
+
+build-tools add-artifact manifest.json \
+    --project reporter \
+    --version "$VERSION_NUMBER" \
+    --build-number "$BUILD_NUMBER" \
+    --path "$REPORTER_DEBIAN_TRIXIE_ARM64_NAME" \
+    --format deb \
+    --git-sha "$GIT_SHA" \
+    --supports-os ubuntu \
+    --supports-version 13 \
+    --supports-codename trixie \
+    --supports-architecture arm64
+
+
 if $RELEASE ; then
 
     changes \
@@ -168,6 +205,8 @@ if $RELEASE ; then
         "$BUILD_DIRECTORY/$REPORTER_UBUNTU_NOBLE_ARM64_NAME" \
         "$BUILD_DIRECTORY/$REPORTER_UBUNTU_QUESTING_AMD64_NAME" \
         "$BUILD_DIRECTORY/$REPORTER_UBUNTU_QUESTING_ARM64_NAME" \
+        "$BUILD_DIRECTORY/$REPORTER_DEBIAN_TRIXIE_AMD64_NAME" \
+        "$BUILD_DIRECTORY/$REPORTER_DEBIAN_TRIXIE_ARM64_NAME" \
         "$BUILD_DIRECTORY/manifest.json"
 
 fi
