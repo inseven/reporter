@@ -126,36 +126,6 @@ REPORTER_UBUNTU_NOBLE_ARM64_NAME="reporter_${VERSION_NUMBER}-noble${BUILD_NUMBER
         --supports-codename noble \
         --supports-architecture arm64
 
-REPORTER_UBUNTU_PLUCKY_AMD64_NAME="reporter_${VERSION_NUMBER}-plucky${BUILD_NUMBER}_amd64.deb"
-cp "$ARTIFACTS_DIRECTORY/reporter-ubuntu-plucky-amd64/reporter.deb" "$REPORTER_UBUNTU_PLUCKY_AMD64_NAME"
-
-build-tools add-artifact manifest.json \
-    --project reporter \
-    --version "$VERSION_NUMBER" \
-    --build-number "$BUILD_NUMBER" \
-    --path "$REPORTER_UBUNTU_PLUCKY_AMD64_NAME" \
-    --format deb \
-    --git-sha "$GIT_SHA" \
-    --supports-os ubuntu \
-    --supports-version 25.04 \
-    --supports-codename plucky \
-    --supports-architecture amd64
-
-REPORTER_UBUNTU_PLUCKY_ARM64_NAME="reporter_${VERSION_NUMBER}-plucky${BUILD_NUMBER}_arm64.deb"
-cp "$ARTIFACTS_DIRECTORY/reporter-ubuntu-plucky-arm64/reporter.deb" "$REPORTER_UBUNTU_PLUCKY_ARM64_NAME"
-
-build-tools add-artifact manifest.json \
-    --project reporter \
-    --version "$VERSION_NUMBER" \
-    --build-number "$BUILD_NUMBER" \
-    --path "$REPORTER_UBUNTU_PLUCKY_ARM64_NAME" \
-    --format deb \
-    --git-sha "$GIT_SHA" \
-    --supports-os ubuntu \
-    --supports-version 25.04 \
-    --supports-codename plucky \
-    --supports-architecture arm64
-
 REPORTER_UBUNTU_QUESTING_AMD64_NAME="reporter_${VERSION_NUMBER}-questing${BUILD_NUMBER}_amd64.deb"
 cp "$ARTIFACTS_DIRECTORY/reporter-ubuntu-questing-amd64/reporter.deb" "$REPORTER_UBUNTU_QUESTING_AMD64_NAME"
 
@@ -196,8 +166,6 @@ if $RELEASE ; then
         "$BUILD_DIRECTORY/$REPORTER_MACOS_NAME" \
         "$BUILD_DIRECTORY/$REPORTER_UBUNTU_NOBLE_AMD64_NAME" \
         "$BUILD_DIRECTORY/$REPORTER_UBUNTU_NOBLE_ARM64_NAME" \
-        "$BUILD_DIRECTORY/$REPORTER_UBUNTU_PLUCKY_AMD64_NAME" \
-        "$BUILD_DIRECTORY/$REPORTER_UBUNTU_PLUCKY_ARM64_NAME" \
         "$BUILD_DIRECTORY/$REPORTER_UBUNTU_QUESTING_AMD64_NAME" \
         "$BUILD_DIRECTORY/$REPORTER_UBUNTU_QUESTING_ARM64_NAME" \
         "$BUILD_DIRECTORY/manifest.json"

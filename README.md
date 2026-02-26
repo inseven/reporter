@@ -10,8 +10,6 @@ Reporter is a lightweight command line utility that generates email reports show
 
 Most other change detection tools I've been able to find appear to be focused on integrity checks or more complaince-focused auditing. Conversely, my goal with Reporter is to create something that's easy to configure and offers more consumer-style reports—the sort of thing you might get from Dropbox or other centralized file sync services.
 
-_This is currently in active development so your mileage may vary, but I'd love your feedback and input if you try it out and find it useful._
-
 ## Installation
 
 There are currently pre-built binaries for macOS, and for amd64 and arm64 builds of Ubuntu, releases 24.04 (Noble Numbat) and 25.10 (Questing Quokka).
