@@ -163,7 +163,7 @@ build-tools add-artifact manifest.json \
 # Debian.
 
 REPORTER_DEBIAN_TRIXIE_AMD64_NAME="reporter_${VERSION_NUMBER}-trixie${BUILD_NUMBER}_amd64.deb"
-cp "$ARTIFACTS_DIRECTORY/reporter-ubuntu-trixie-amd64/reporter.deb" "$REPORTER_DEBIAN_TRIXIE_AMD64_NAME"
+cp "$ARTIFACTS_DIRECTORY/reporter-debian-trixie-amd64/reporter.deb" "$REPORTER_DEBIAN_TRIXIE_AMD64_NAME"
 
 build-tools add-artifact manifest.json \
     --project reporter \
@@ -172,13 +172,13 @@ build-tools add-artifact manifest.json \
     --path "$REPORTER_DEBIAN_TRIXIE_AMD64_NAME" \
     --format deb \
     --git-sha "$GIT_SHA" \
-    --supports-os ubuntu \
+    --supports-os debian \
     --supports-version 13 \
     --supports-codename trixie \
     --supports-architecture amd64
 
 REPORTER_DEBIAN_TRIXIE_ARM64_NAME="reporter_${VERSION_NUMBER}-trixie${BUILD_NUMBER}_arm64.deb"
-cp "$ARTIFACTS_DIRECTORY/reporter-ubuntu-trixie-arm64/reporter.deb" "$REPORTER_DEBIAN_TRIXIE_ARM64_NAME"
+cp "$ARTIFACTS_DIRECTORY/reporter-debian-trixie-arm64/reporter.deb" "$REPORTER_DEBIAN_TRIXIE_ARM64_NAME"
 
 build-tools add-artifact manifest.json \
     --project reporter \
@@ -187,7 +187,7 @@ build-tools add-artifact manifest.json \
     --path "$REPORTER_DEBIAN_TRIXIE_ARM64_NAME" \
     --format deb \
     --git-sha "$GIT_SHA" \
-    --supports-os ubuntu \
+    --supports-os debian \
     --supports-version 13 \
     --supports-codename trixie \
     --supports-architecture arm64

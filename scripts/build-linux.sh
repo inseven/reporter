@@ -79,7 +79,6 @@ case $DISTRO in
     ubuntu|debian)
 
         ARCHITECTURE=`dpkg --print-architecture`
-        OS_VERSION="$DISTRIB_RELEASE"
         PACKAGE_FILENAME="reporter.deb"
         fpm \
             -s dir \
