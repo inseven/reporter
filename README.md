@@ -8,7 +8,7 @@ File change report generator for macOS and Linux a with built-in mailer
 
 Reporter is a lightweight command line utility that generates email reports showing all file system changes since the last run. It is intended to pair with self-hosted file shares and network attached storage to improve visibility of file changes with minimum cognitive overhead.
 
-Most other change detection tools I've been able to find appear to be focused on integrity checks or more complaince-focused auditing. Conversely, my goal with Reporter is to create something that's easy to configure and offers more consumer-style reports—the sort of thing you might get from Dropbox or other centralized file sync services.
+Most other change detection tools I've been able to find appear to be focused on integrity checks or more compliance-focused auditing. Conversely, my goal with Reporter is to create something that's easy to configure and offers more consumer-style reports—the sort of thing you might get from Dropbox or other centralized file sync services.
 
 ## Installation
 
