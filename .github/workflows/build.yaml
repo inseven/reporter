@@ -199,7 +199,7 @@ jobs:
     - name: Install Linux-specific dependencies
       run: scripts/install-linux-dependencies.sh
 
-    - uses: actions/download-artifact@v6
+    - uses: actions/download-artifact@v8
       with:
         pattern: "reporter-*"
         path: artifacts
