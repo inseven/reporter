@@ -25,6 +25,11 @@ set -o pipefail
 set -x
 set -u
 
+function fatal {
+    echo $1 >&2
+    exit 1
+}
+
 ROOT_DIRECTORY="$( cd "$( dirname "$( dirname "${BASH_SOURCE[0]}" )" )" &> /dev/null && pwd )"
 SCRIPTS_DIRECTORY="$ROOT_DIRECTORY/scripts"
 BUILD_DIRECTORY="$ROOT_DIRECTORY/build"
