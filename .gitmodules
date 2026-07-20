@@ -1,6 +1,6 @@
 [submodule "dependencies/Swift-SMTP"]
 	path = dependencies/Swift-SMTP
-	url = git@github.com:jbmorley/Swift-SMTP.git
+	url = https://github.com/jbmorley/Swift-SMTP.git
 [submodule "scripts/changes"]
 	path = scripts/changes
 	url = https://github.com/jbmorley/changes.git
