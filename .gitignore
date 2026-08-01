@@ -2,6 +2,7 @@
 /.local
 /.swiftpm
 /Packages
+/scripts/Pipfile.lock
 
 .DS_Store
 .netrc
