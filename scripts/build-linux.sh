@@ -31,13 +31,9 @@ function fatal {
 }
 
 ROOT_DIRECTORY="$( cd "$( dirname "$( dirname "${BASH_SOURCE[0]}" )" )" &> /dev/null && pwd )"
-SCRIPTS_DIRECTORY="$ROOT_DIRECTORY/scripts"
 BUILD_DIRECTORY="$ROOT_DIRECTORY/build"
 SWIFT_BUILD_DIRECTORY="$ROOT_DIRECTORY/.build"
 ARTIFACTS_DIRECTORY="$BUILD_DIRECTORY/artifacts"
-
-
-source "$SCRIPTS_DIRECTORY/environment.sh"
 
 # Clean up and recreate the output directories.
 if [ -d "$SWIFT_BUILD_DIRECTORY" ] ; then
