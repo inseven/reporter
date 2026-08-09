@@ -26,7 +26,6 @@ set -x
 set -u
 
 ROOT_DIRECTORY="$( cd "$( dirname "$( dirname "${BASH_SOURCE[0]}" )" )" &> /dev/null && pwd )"
-SCRIPTS_DIRECTORY="$ROOT_DIRECTORY/scripts"
 BUILD_DIRECTORY="$ROOT_DIRECTORY/build"
 SWIFT_BUILD_DIRECTORY="$ROOT_DIRECTORY/.build"
 ARTIFACTS_DIRECTORY="$BUILD_DIRECTORY/artifacts"
@@ -35,8 +34,6 @@ TEMPORARY_DIRECTORY="$ROOT_DIRECTORY/temp"
 ARCHIVE_PATH="$BUILD_DIRECTORY/Reporter.xcarchive"
 ENV_PATH="$ROOT_DIRECTORY/.env"
 KEYCHAIN_PATH="$TEMPORARY_DIRECTORY/temporary.keychain"
-
-source "$SCRIPTS_DIRECTORY/environment.sh"
 
 # Generate a random string to secure the local keychain.
 export TEMPORARY_KEYCHAIN_PASSWORD=`openssl rand -base64 14`
