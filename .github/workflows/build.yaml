@@ -16,7 +16,7 @@ concurrency:
 jobs:
 
   generate-version-number:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
 
     outputs:
       version_number: ${{ steps.version.outputs.version_number }}
@@ -176,7 +176,7 @@ jobs:
         if-no-files-found: error
 
   publish-release:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
 
     needs:
     - generate-version-number
@@ -232,7 +232,7 @@ jobs:
     needs: publish-release
     if: ${{ github.ref == 'refs/heads/main' }}
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
 
     - name: Update releases repository
