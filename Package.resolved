@@ -6,8 +6,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/christophhagen/BinaryCodable",
       "state" : {
-        "revision" : "c2ef4834bf038a998c36301d910a8525de5e12b1",
-        "version" : "3.2.0"
+        "revision" : "9e5ef6ca38f18d0bdfbe134dadbe1517f7468293",
+        "version" : "4.0.0"
       }
     },
     {
