@@ -38,7 +38,7 @@ let package = Package(
     dependencies: [
         .package(path: "dependencies/Swift-SMTP"),
         .package(url: "https://github.com/apple/swift-argument-parser", from: "1.3.0"),
-        .package(url: "https://github.com/christophhagen/BinaryCodable", from: "3.0.0"),
+        .package(url: "https://github.com/christophhagen/BinaryCodable", from: "4.0.0"),
         .package(url: "https://github.com/stencilproject/Stencil.git", from: "0.15.1"),
         .package(url: "https://github.com/apple/swift-crypto.git", "1.0.0" ..< "5.0.0"),
     ],
