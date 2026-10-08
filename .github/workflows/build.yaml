@@ -94,7 +94,7 @@ jobs:
         scripts/build-macos.sh
 
     - name: Archive the binary
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@v7
       with:
         name: reporter-macos
         path: build/artifacts/*
@@ -173,7 +173,7 @@ jobs:
         scripts/build-linux.sh
 
     - name: Archive the binary
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@v7
       with:
         name: reporter-${{ matrix.name }}
         path: build/artifacts/*
@@ -232,7 +232,7 @@ jobs:
       run: scripts/release.sh
 
     - name: Archive the binaries
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@v7
       with:
         name: build
         path: build/*
