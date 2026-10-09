@@ -99,6 +99,7 @@ jobs:
         name: reporter-macos
         path: build/artifacts/*
         if-no-files-found: error
+        retention-days: 1
 
   linux-build:
     strategy:
@@ -178,6 +179,7 @@ jobs:
         name: reporter-${{ matrix.name }}
         path: build/artifacts/*
         if-no-files-found: error
+        retention-days: 1
 
   publish-release:
     runs-on: ubuntu-26.04
@@ -237,6 +239,7 @@ jobs:
         name: build
         path: build/*
         if-no-files-found: error
+        retention-days: 1
 
   update-releases:
     needs: publish-release
