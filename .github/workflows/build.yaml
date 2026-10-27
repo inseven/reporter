@@ -33,7 +33,7 @@ jobs:
       uses: jdx/mise-action@v5.2.3
       with:
         cache: false
-        version: 2026.10.19
+        version: 2026.10.21
         mise_toml: |
           [tools]
           "pipx:changes-semver" = "6"
@@ -80,7 +80,7 @@ jobs:
     - name: Install mise
       uses: jdx/mise-action@v5.2.3
       with:
-        version: 2026.10.19
+        version: 2026.10.21
         cache: false
 
     - name: Build, test, and release
@@ -215,7 +215,7 @@ jobs:
     - name: Install mise
       uses: jdx/mise-action@v5.2.3
       with:
-        version: 2026.10.19
+        version: 2026.10.21
         cache: false
 
     - name: Install Linux-specific dependencies
