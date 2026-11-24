@@ -40,7 +40,7 @@ let package = Package(
         .package(url: "https://github.com/apple/swift-argument-parser", from: "1.8.2"),
         .package(url: "https://github.com/christophhagen/BinaryCodable", from: "4.0.1"),
         .package(url: "https://github.com/stencilproject/Stencil.git", from: "0.15.1"),
-        .package(url: "https://github.com/apple/swift-crypto.git", "1.0.0" ... "5.1.2"),
+        .package(url: "https://github.com/apple/swift-crypto.git", "1.0.0" ... "5.2.0"),
     ],
     targets: [
         .executableTarget(
